@@ -35,9 +35,7 @@ function ChatInput({chatId}: Props) {
         const input = prompt.trim();
 
         const baseText = 'You are a Data Protection Officer analyzing privacy laws. This is what you are asked to analyze: ';
-        const legalTextPart = input
-        ? ' As part of your response, include any analysis that is relevant to these new legal decisions: ' + legalText + '.'
-         : '';
+        const legalTextPart =  ' As part of your response, include any analysis that is relevant to these new legal decisions: GDPR, DMA, DSA' ;
         const formatText = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability. ';
 
         const combinedText = baseText + prompt + legalTextPart + formatText;
@@ -46,7 +44,7 @@ function ChatInput({chatId}: Props) {
         setPrompt("");
         
         const message: Message ={
-            text: combinedText,
+            text: input,
             createdAt: serverTimestamp(),
             user:{
                 _id:session?.user?.email!,
@@ -69,7 +67,7 @@ function ChatInput({chatId}: Props) {
                 "Content-Type" : "application/json",
             },
             body: JSON.stringify({
-                prompt: input, 
+                prompt: combinedText, 
                 chatId, 
                 model, 
                 session,
