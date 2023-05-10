@@ -8,6 +8,20 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+@layer components{
+  .infoText{
+    @apply p-4 bg-gray-100 text-sm rounded-lg max-w-[300px]
+
+
+  }
+  .chatRow{
+    @apply rounded-lg px-5 py-3 text-sm flex items-center 
+    justify-center space-x-2 hover:bg-gray-700/70 cursor-pointer text-gray-300
+    transition-all duration-200 ease-out
+  }
+
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
