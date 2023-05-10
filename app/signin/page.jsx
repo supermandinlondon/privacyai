@@ -1,6 +1,5 @@
 import Button from 'all/components//Button'
 import GoogleSignInButton from 'all/components//GoogleSignInButton'
-import TextField from 'all/components//TextField'
 
 const SignInPage = () => {
   return (
@@ -13,17 +12,7 @@ const SignInPage = () => {
         </div>
         <div className='sm:rounded-5xl -mx-4 mt-10 flex-auto bg-white px-4 py-10 shadow-2xl shadow-gray-900/10 sm:mx-0 sm:flex-none sm:p-24'>
           <form>
-            <div className='space-y-2'>
-              <TextField
-                id='email'
-                name='email'
-                type='email'
-                label='Sign in with your email'
-                placeholder='hello@me.com'
-                autoComplete='email'
-                required
-              />
-            </div>
+            
             <Button
               type='submit'
               variant='outline'

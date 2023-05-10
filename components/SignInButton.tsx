@@ -23,10 +23,11 @@ const SignInButton = () => {
               <div className='relative h-10 w-10'>
                 <Image
                   src={session.user.image}
-                  alt={session.user.name}
+                  alt={session.user.name ?? "User Image"}
                   className='inline-block rounded-full'
                   fill
                 />
+
               </div>
             ) : (
               <span className='inline-block h-8 w-8 overflow-hidden rounded-full bg-stone-100'>
@@ -53,8 +54,8 @@ const SignInButton = () => {
                 {session?.user?.image ? (
                   <div className='relative h-10 w-10'>
                     <Image
-                      src={session.user.image}
-                      alt={session.user.name}
+                      src={session?.user?.image!}
+                      alt={session?.user?.name!}
                       className='inline-block rounded-full'
                       fill
                     />
@@ -71,10 +72,11 @@ const SignInButton = () => {
                   </span>
                 )}
                 <div>
-                  <p className='font-medium text-stone-600'>
-                    {session.user.name || 'User name'}
-                  </p>
-                  <p className='text-stone-400'>{session.user.email}</p>
+                <p className='font-medium text-stone-600'>
+                  {session.user?.name ?? 'User name'}
+                </p>
+
+                  <p className='text-stone-400'>{session.user?.email?? 'User email'}</p>
                 </div>
               </div>
               <Menu.Item>

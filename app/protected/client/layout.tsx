@@ -7,7 +7,11 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
 
-const ClientLayout = ({ children }) => {
+const ClientLayout = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
