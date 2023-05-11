@@ -20,6 +20,7 @@ const Header = () => {
 
 			{/* Mid - Links */}
 			
+			
 
       <div className="flex justify-center">
         <Link href='/protected/client'>Privacy J.A.R.V.I.S</Link>
