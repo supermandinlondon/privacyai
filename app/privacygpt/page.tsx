@@ -44,7 +44,7 @@ import Link from "next/link";
                 <div className="flex flex-col items-center justify-center mb-5">
                     {/*ExclamationTriangle Icon */}
                     <ExclamationTriangleIcon className="h-8 w-8" />
-                    <h2>Limitations12345678</h2>
+                    <h2>Limitations1</h2>
                 </div>
                 <div className="space-y-2">
                     <p className="infoText">"Explain"</p>
