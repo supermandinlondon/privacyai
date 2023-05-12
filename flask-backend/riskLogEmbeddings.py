@@ -1,4 +1,4 @@
-# To start server for developmen run: $env:FLASK_APP = "app" and then run flask run --host=0.0.0.0 --port=5001
+# To start server for development use the startFlaskServer.py file, by running python startFlaskServer.py in the terminal.
 
 
 import sys
