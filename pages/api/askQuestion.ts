@@ -12,7 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-    const {prompt, chatId, model, session} = req.body;
+    const { prompt, chatId, model, session, messages } = req.body;
     if(!prompt){
         res.status(400).json({answer: "Please provide a prompt!"});
         return;
@@ -25,7 +25,7 @@ export default async function handler(
 
     // ChatGPT Query 
 
-    const response = await query(prompt, chatId, model);
+    const response = await query(prompt, chatId, model, messages);
 
     const message: Message = {
         text: response || "ChatGPT was unable to find the answer of thatb!",

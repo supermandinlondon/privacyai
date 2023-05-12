@@ -1,5 +1,5 @@
 import Chat from "all/components/Chat";
-import ChatInput from "all/components/ChatInput";
+import RiskAssessmentInput from "all/components/RiskAssessmentInput";
 
 type Props= {
     params: {
@@ -7,13 +7,13 @@ type Props= {
     }
 }
 
-function ChatPage({params: {id}}: Props) {
+function RiskAssessmentPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <Chat chatId ={id}/>
-        <ChatInput chatId ={id}/>
+        <RiskAssessmentInput chatId ={id}/>
     </div>
   );
 }
 
-export default ChatPage;
+export default RiskAssessmentPage;

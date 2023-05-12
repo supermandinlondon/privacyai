@@ -1,6 +1,6 @@
 import { ChatBubbleLeftIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { db } from "all/firebase";
-import { collection, deleteDoc, doc, orderBy, query } from "firebase/firestore";
+import { collection, deleteDoc, doc, orderBy, query, where } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,18 +9,22 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 type Props = {
     id: string;
+    filterRiskAssessment?: boolean;
 
 }
 
-function ChatRow({id}: Props) {
+function ChatRow({ id, filterRiskAssessment = false }: Props) {
     const pathname = usePathname();
     const router = useRouter();
     const {data: session} = useSession();
     const [active, setActive] = useState(false);
 
     const [messages] = useCollection(
-        collection(db,'users',session?.user?.email!,'chats',id,'messages')
-    );
+        query(
+          collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'),
+          filterRiskAssessment ? where('isRiskAssessment', '==', true) : orderBy('createdAt', 'desc')
+        )
+      );
 
     useEffect(() => {
         if (!pathname) return;
