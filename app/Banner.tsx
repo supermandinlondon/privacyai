@@ -17,7 +17,7 @@ const Banner = () => {
 
 			<div className="absolute grid text-lg w-full text-white top-1/4  ">
 
-					<div className='text-3xl text-center'><span className='text-blue-500'>AI-assisted</span> privacy advice and risk assessment</div>
+					<div className='text-3xl text-center'><span className='text-blue-500'>AI-assisted1</span> privacy advice and risk assessment</div>
 					
 				
 			</div>
