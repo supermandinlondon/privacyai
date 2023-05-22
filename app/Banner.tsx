@@ -27,7 +27,7 @@ const Banner = () => {
 				<Link
 					href ="/privacygpt"
 					className="px-10 py-4 my-3 font-bold text-blue-500 transition duration-150 bg-white rounded-full shadow-md hover:shadow-xl active:scale-90">
-						Try J.A.R.V.I.S
+						Try J.A.R.V.I.S.2.3
         		</Link>
 				
 			</div>
