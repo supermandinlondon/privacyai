@@ -5,13 +5,13 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 
- function RiskAssessment() {
+ function ProductSolution() {
 
   return (
     <div>
         <div className="flex flex-col items-center justify-center h-screen px-2 text-white" >
             <Link
-                href ="/riskassessment"
+                href ="/productsolution"
                 className="text-5xl font-bold mb-20">
                 Risk Assessment Log
             </Link>
@@ -58,5 +58,5 @@ import Link from "next/link";
   )
 }
 
-export default RiskAssessment;
+export default ProductSolution;
 

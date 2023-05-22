@@ -10,21 +10,31 @@ import { useCollection } from "react-firebase-hooks/firestore";
 type Props = {
     id: string;
     filterRiskAssessment?: boolean;
+    filterAdvice?: boolean;
 
 }
 
-function ChatRow({ id, filterRiskAssessment = false }: Props) {
+function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false }: Props) {
     const pathname = usePathname();
     const router = useRouter();
     const {data: session} = useSession();
     const [active, setActive] = useState(false);
 
+    let queryParam;
+    if (filterRiskAssessment) {
+        queryParam = where('isRiskAssessment', '==', true);
+    } else if (filterAdvice) {
+        queryParam = where('isAdvice', '==', true);
+    } else {
+        queryParam = orderBy('createdAt', 'desc');
+    }
+
     const [messages] = useCollection(
         query(
           collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'),
-          filterRiskAssessment ? where('isRiskAssessment', '==', true) : orderBy('createdAt', 'desc')
+          queryParam
         )
-      );
+    );
 
     useEffect(() => {
         if (!pathname) return;

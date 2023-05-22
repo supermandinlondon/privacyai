@@ -24,26 +24,33 @@ function RiskAssessmentInput({chatId}: Props) {
         fallbackData:'gpt-3.5-turbo'
     })
 
-    const queryEmbeddings = async (prompt: string) => {
-        try {
-        console.log('Sending prompt to Flask server:', prompt); // Log the prompt being sent
-        const response = await axios.post('http://localhost:5001/api/query_embeddings', { prompt: prompt });
+    // Send query to the Flask server
+    const queryEmbeddings = async (data: { prompt: string, index_name: string }) => {
+      try {
+          console.log('Sending data to Flask server:', data);
+          const response = await axios.post('http://localhost:5001/api/query_embeddings', data);
           const matches = response.data;
-        console.log('Received response from Flask server:', matches);
+          console.log('Received response from Flask server:', matches);
           return matches;
-        } catch (error) {
+      } catch (error) {
           console.error('Error fetching query embeddings:', error);
           return [];
-        }
-      };
+      }
+  };  
 
       const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!prompt) return;
         const input = prompt.trim();
+        
+        // Specify the database index to query
+        const requestData = {
+          prompt: input,
+          index_name: "risklog"
+      };
       
         // Call the queryEmbeddings function to get the results from the Flask server
-        const riskObservationsText = await queryEmbeddings(prompt);
+        const riskObservationsText = await queryEmbeddings(requestData);
 
         // Merge the response and develop the query to the OpenAI API
         const baseText = 'You are a Data Protection Officer with expertise in GDPR. Analyze the provided risk observation records to answer the following question: ';
@@ -53,13 +60,15 @@ function RiskAssessmentInput({chatId}: Props) {
         // Rules for analyzing risk log
         const riskRules =
         ' When analyzing the risk observations, please follow these guidelines: ' +
-        '1) You can choose which of te risk observations are most relevant to the question. ' +
-        '2) Provdie a top level summary of the question, but also list specific, risks that are separated by a new line. ' +
+        '1) You can choose which of the risk observations are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
+        '2) Provide a summary of your analysis, but also list specific, risks that are separated by a new line. ' +
         '3) Include the revelent risk observation number at the beginning of each new line in your response, if necessary. ' +
         '4) Keep your response under 200 words.'
         ;
 
-        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules;
+        const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
+
+        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules + formatting;
 
         console.log('Full question:', combinedText);
 
@@ -94,6 +103,7 @@ function RiskAssessmentInput({chatId}: Props) {
               model,
               session,
               messages: [{ role: "user", content: combinedText }],
+              saveToDatabase: true,
             }),
         }).then(() => {
             //Toast notification to say successful

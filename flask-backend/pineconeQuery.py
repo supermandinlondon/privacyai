@@ -1,6 +1,5 @@
 # To start server for development use the startFlaskServer.py file, by running python startFlaskServer.py in the terminal.
 
-
 import sys
 import os
 import numpy as np
@@ -17,28 +16,24 @@ import json
 
 load_dotenv()
 
-# Index name for Pinecone, but this should be updated to a better approach after development
-INDEX_NAME = "risklog"
-
 # Flask server that receives the prompt text from the frontend
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "http://localhost:3000"}})
 
 # Endpoint that the front end will send the prompt text to
 @app.route('/api/query_embeddings', methods=['POST'])
-
 def query_embeddings():
-    print("Recveived request from frontend")  
+    print("Received request from frontend")
     try:
         data = request.get_json()
         prompt = data['prompt']
-        print("Received prompt from frontend:", prompt)  # Log the prompt received
+        index_name = data['index_name']  # Get the index name from the request data
+        print("Received prompt from frontend:", prompt)
 
-        # Query the Pinecone index with the prompt
-        results = search_index(prompt)
+        # Query the Pinecone index with the prompt and the received index name
+        results = search_index(prompt, index_name)
         response = make_response(jsonify(results))
-        print("Sending response to frontend:", results)  # Log the response being sent
-        # Response headers to allow CORS (was running into issues with this previously)
+        print("Sending response to frontend:", results)
         response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
@@ -48,44 +43,47 @@ def query_embeddings():
         print(traceback.format_exc())
         return make_response(jsonify({"error": str(e)}), 500)
 
-# Begin querying the Pinecone index by first creating the query embedding from OpenAI
-def search_index(prompt, top_k=5):
+
+def search_index(prompt, index_name, top_k=5): 
     MODEL = "text-embedding-ada-002"
-    
-    # Set the OpenAI API key
+
     print("OPENAI_API_KEY:", os.getenv("OPENAI_API_KEY"))
     openai.api_key = os.getenv("OPENAI_API_KEY")
-    
-    # Send the prompt to OpenAI to create the query embedding
+
     xq = openai.Embedding.create(input=prompt, engine=MODEL)['data'][0]['embedding']
     print("Query embedding")
 
-    # Initialize Pinecone client
     api_key = os.getenv("PINECONE_API_KEY")
     pinecone.init(api_key=api_key, environment="us-east-1-aws")
     print("Pinecone initialized")
 
-    # Define the Pincone index to search
-    index = pinecone.Index(INDEX_NAME)
+    # Use the received index name
+    index = pinecone.Index(index_name)
     print("Pinecone index object search")
 
-    # Query the pinecone index, returning the top k most similar results
     res = index.query(queries=[xq], top_k=top_k, include_metadata=True)
     print("Query sent...")
     print("Pinecone query response:", res)
-    
 
-    # Format the results as a list of strings that can be returned to the frontend
-    formatted_results = [
-        f"{index + 1}. {match['metadata']['observation']} [{match['metadata']['principle']}]. This has a {match['metadata']['ds_harm']} Data Subject Harm and {match['metadata']['c_harm']} Controller Harm."
-        for index, match in enumerate(res['results'][0]['matches'])
-    ]
+    # Format results based on index_name
+    if index_name == 'risklog':
+        formatted_results = [
+            f"{i + 1}. {match['metadata']['observation']} [{match['metadata']['principle']}]. This has a {match['metadata']['ds_harm']} Data Subject Harm and {match['metadata']['c_harm']} Controller Harm."
+            for i, match in enumerate(res['results'][0]['matches'])
+        ]
+    elif index_name == 'privacylaws':
+        formatted_results = [
+            f"{i + 1}. Law: {match['id']} - Summary: {match['metadata']['summary']}."
+            for i, match in enumerate(res['results'][0]['matches'])
+        ]
+    else:
+        formatted_results = [str(match) for match in res['results'][0]['matches']]
 
-    # Deinitialize Pinecone
     pinecone.init()
 
-    #send results back to frontend
+    app.logger.info("Pinecone formatted response: ", formatted_results)
     return formatted_results
+
 
 
 # Main function

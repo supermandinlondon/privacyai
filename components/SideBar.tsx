@@ -6,7 +6,9 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { db } from "all/firebase";
 import ChatRow from "./ChatRow";
 import NewChat from "./NewChat";
-import NewRiskChat from "./NewRiskChat"; // Import NewRiskChat
+import NewRiskChat from "./NewRiskChat";
+import NewAdviceChat from "./NewAdviceChat";
+import NewProductSolutionChat from "./NewProductSolutionChat";
 import ModelSelection from "./ModelSelection";
 
 function SideBar() {
@@ -19,17 +21,30 @@ function SideBar() {
       )
   );
 
-  // Check if the current route is related to risk assessment
+  // Check if the current route is related to risk assessment or advice
   const isRiskAssessmentRoute =
-    (typeof window !== "undefined" && window.location.pathname === "/riskassessment") ||
-    window.location.pathname.startsWith("/protected/client/riskassessmentchat/");
+  (typeof window !== "undefined" && window.location.pathname === "/riskassessment") ||
+  (typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/protected/client/riskassessmentchat/"));
+
+  const isAdviceRoute =
+  (typeof window !== "undefined" && window.location.pathname === "/advice") ||
+  (typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/protected/client/advicechat/"));
+
+  const isProductSolutionRoute =
+  (typeof window !== "undefined" && window.location.pathname === "/productsolution") ||
+  (typeof window !== "undefined" &&
+    window.location.pathname.startsWith("/protected/client/productsolutionchat/"));
+
+  
 
   return (
     <div className="p-2 flex flex-col h-screen">
       <div className="flex-1">
         <div>
-          {/* Conditionally render NewRiskChat or NewChat */}
-          {isRiskAssessmentRoute ? <NewRiskChat /> : <NewChat />}
+          {/* Conditionally render NewRiskChat, NewAdviceChat, or NewChat */}
+        {isRiskAssessmentRoute ? <NewRiskChat /> : isAdviceRoute ? <NewAdviceChat /> : isProductSolutionRoute ? <NewProductSolutionChat /> : <NewChat />}
 
           <div className="hidden sm:inline">
             <ModelSelection />
@@ -49,6 +64,14 @@ function SideBar() {
                 if (isRiskAssessmentRoute) {
                   return chat.data().isRiskAssessment === true;
                 }
+                // If on an advice route, only show advice chats
+                if (isAdviceRoute) {
+                  return chat.data().isAdvice === true;
+              }
+                // If on an product solution route, only show product solution chats
+                if (isProductSolutionRoute) {
+                return chat.data().isAProductSolution === true;
+              }
                 // If on a non-risk assessment route, show all chats
                 return true;
               })
