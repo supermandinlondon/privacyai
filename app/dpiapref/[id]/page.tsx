@@ -227,7 +227,7 @@ function DpiaPage() {
               checked={checkbox1}
               onChange={(e) => setCheckbox1(e.target.checked)}
             />
-            <label>Checkbox 1</label>
+            <label>Include Regulatory Enfocements</label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -237,7 +237,7 @@ function DpiaPage() {
               checked={checkbox2}
               onChange={(e) => setCheckbox2(e.target.checked)}
             />
-            <label>Checkbox 2</label>
+            <label>Product Product Brief</label>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -247,7 +247,7 @@ function DpiaPage() {
               checked={checkbox3}
               onChange={(e) => setCheckbox3(e.target.checked)}
             />
-            <label>Checkbox 3</label>
+            <label>Include Relavant Judgements</label>
           </div>
         </div>
 
