@@ -4,8 +4,9 @@ import { db } from "../firebase";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useCollection } from "react-firebase-hooks/firestore";
-import Message from "./Message";
+
 import { ArrowDownCircleIcon } from "@heroicons/react/24/outline";
+import Message from "./Message";
 
 type Props= {
     chatId: string;

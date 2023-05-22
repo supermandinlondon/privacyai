@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { db } from 'all/firebase';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { motion } from 'framer-motion';
+import { firestore } from 'firebase-admin';
 
 async function Productpage() {
   const router = useRouter();
@@ -33,8 +34,8 @@ async function Productpage() {
         userID: session?.user?.email,
         createdAt: serverTimestamp(),
       };
-      const docRef = await addDoc(collection(db, 'users', session?.user?.email, 'products'), newProduct);
-      console.log('New product added with ID: ', docRef.id);
+      //const docRef = await addDoc(collection(firestore, 'users', session?.user?.email, 'products'), newProduct);
+     // console.log('New product added with ID: ', docRef.id);
     } catch (error) {
       console.error('Error adding new product: ', error);
     }
@@ -62,7 +63,7 @@ async function Productpage() {
         >
           <div className="flex items-center justify-between mb-5">
             <p className="text-lg hover:text-white font-semibold">
-              Name: {product?.name}
+             Name: xxx
             </p>
             <div className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
               <PlusIcon className="w-5 h-5 mr-2" />
