@@ -12,12 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-    console.log("inside ask question api112");
-    const {prompt, chatId, model, session} = req.body;
-   
-    console.log("prompt :: "+ prompt);
-    console.log("chatId :: "+chatId);
-    console.log("model  :: "+ model);
+    const { prompt, chatId, model, session, messages, saveToDatabase } = req.body;
     if(!prompt){
         res.status(400).json({answer: "Please provide a prompt!"});
         return;
@@ -30,8 +25,7 @@ export default async function handler(
 
     // ChatGPT Query 
 
-    const response = await queryGPT(prompt, chatId, model);
-    
+    const response = await query(prompt, chatId, model, messages);
 
     const message: Message = {
         text: response || "ChatGPT was unable to find the answer of that!",
@@ -43,15 +37,15 @@ export default async function handler(
         },
     };
 
-    console.log("inside ask question api. resoonse" + message.text );
-
-    await adminDb
-        .collection('users')
-        .doc(session?.user?.email)
-        .collection("chats")
-        .doc(chatId)
-        .collection("messages")
-        .add(message)
+    if (saveToDatabase) {
+        await adminDb
+            .collection('users')
+            .doc(session?.user?.email)
+            .collection("chats")
+            .doc(chatId)
+            .collection("messages")
+            .add(message)
+    }
 
 
     res.status(200).json({ answer: message.text })

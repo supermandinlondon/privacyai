@@ -1,5 +1,5 @@
 import Chat from "all/components/Chat";
-import ChatInput from "all/components/ChatInput";
+import AdviceInput from "all/components/AdviceInput";
 
 type Props= {
     params: {
@@ -7,13 +7,13 @@ type Props= {
     }
 }
 
-function ChatPage({params: {id}}: Props) {
+function AdvicePage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <Chat chatId ={id}/>
-        <ChatInput chatId ={id}/>
+        <AdviceInput chatId ={id}/>
     </div>
   );
 }
 
-export default ChatPage;
+export default AdvicePage;

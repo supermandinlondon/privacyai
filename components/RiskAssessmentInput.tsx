@@ -8,13 +8,15 @@ import { useSession } from "next-auth/react";
 import { FormEvent, useState } from "react";
 import ModelSelection from "./ModelSelection";
 import useSWR from "swr";
-
+import axios from "axios";
 
 type Props= {
         chatId: string;
     };
 
-function ChatInput({chatId}: Props) {
+
+    
+function RiskAssessmentInput({chatId}: Props) {
     const [prompt, setPrompt] = useState("");
     const {data: session} = useSession();
 
@@ -22,17 +24,53 @@ function ChatInput({chatId}: Props) {
         fallbackData:'gpt-3.5-turbo'
     })
 
-    const sendMessage = async (e: FormEvent<HTMLFormElement>) =>{
-        e.preventDefault()
-        if(!prompt) return;
+    // Send query to the Flask server
+    const queryEmbeddings = async (data: { prompt: string, index_name: string }) => {
+      try {
+          console.log('Sending data to Flask server:', data);
+          const response = await axios.post('http://localhost:5001/api/query_embeddings', data);
+          const matches = response.data;
+          console.log('Received response from Flask server:', matches);
+          return matches;
+      } catch (error) {
+          console.error('Error fetching query embeddings:', error);
+          return [];
+      }
+  };  
 
+      const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!prompt) return;
         const input = prompt.trim();
-        const baseText = 'You are a Data Protection Officer analyzing privacy laws. This is what you are asked to analyze: ';
-        const legalTextPart =  ' As part of your response, include any analysis that is relevant to these new legal decisions: GDPR, DMA, DSA' ;
-        const formatText = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability. ';
+        
+        // Specify the database index to query
+        const requestData = {
+          prompt: input,
+          index_name: "risklog"
+      };
+      
+        // Call the queryEmbeddings function to get the results from the Flask server
+        const riskObservationsText = await queryEmbeddings(requestData);
 
-        const combinedText = baseText + prompt + legalTextPart + formatText;
+        // Merge the response and develop the query to the OpenAI API
+        const baseText = 'You are a Data Protection Officer with expertise in GDPR. Analyze the provided risk observation records to answer the following question: ';
 
+        const riskQuestion = '. These are the risk observations that matched the question, which are numbered: ';
+      
+        // Rules for analyzing risk log
+        const riskRules =
+        ' When analyzing the risk observations, please follow these guidelines: ' +
+        '1) You can choose which of the risk observations are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
+        '2) Provide a summary of your analysis, but also list specific, risks that are separated by a new line. ' +
+        '3) Include the revelent risk observation number at the beginning of each new line in your response, if necessary. ' +
+        '4) Keep your response under 200 words.'
+        ;
+
+        const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
+
+        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules + formatting;
+
+        console.log('Full question:', combinedText);
 
         setPrompt("");
         
@@ -57,14 +95,15 @@ function ChatInput({chatId}: Props) {
         await fetch("/api/askQuestion", {
             method: "POST",
             headers: {
-                "Content-Type" : "application/json",
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                prompt: combinedText, 
-                chatId, 
-                model, 
-                session,
-                messages: [{ role: "user", content: combinedText }],
+              prompt: combinedText,
+              chatId,
+              model,
+              session,
+              messages: [{ role: "user", content: combinedText }],
+              saveToDatabase: true,
             }),
         }).then(() => {
             //Toast notification to say successful
@@ -117,5 +156,5 @@ function ChatInput({chatId}: Props) {
   );
 }
 
-export default ChatInput;
+export default RiskAssessmentInput;
 
