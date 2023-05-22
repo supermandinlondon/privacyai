@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import { ArrowDownCircleIcon } from "@heroicons/react/24/outline";
-import Message from "./Message";
+import Message from "./message";
 
 type Props= {
     chatId: string;
