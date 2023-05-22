@@ -1,3 +1,5 @@
+"use client"
+import TransitionEffect from "all/app/TransitionEffect";
 import Dpia2 from "all/components/Dpia2";
 
 
@@ -10,6 +12,7 @@ type Props= {
 function DpiaPage({params: {id}}: Props) {
 return (
   <div className="flex bg-white flex-col h-screen overflow-hidden">
+     <TransitionEffect />
      <Dpia2 dpiaId ={id}/>
   </div>
 );

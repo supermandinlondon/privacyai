@@ -14,6 +14,7 @@ import queryGPT from 'all/lib/queryApi';
 
 
 import { motion } from 'framer-motion';
+import TransitionEffect from 'all/app/TransitionEffect';
 
 function NewProduct() {
   const router = useRouter();
@@ -65,14 +66,14 @@ function NewProduct() {
   
     return (
       <div className="p-8">
-
+        <TransitionEffect />
        <div className="flex items-right justify-between mb-4">
             <p></p>
             <div
               onClick={createNewProduct}
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
             >
-              Add New Product
+              Add New Product123
             </div>     
         </div>  
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">

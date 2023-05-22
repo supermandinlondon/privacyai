@@ -1,21 +1,36 @@
 import Link from 'next/link'
 import SignInButton from './SignInButton';
 import Image from 'next/image';
-import NewDpia from './NewDpia';
+import Logo from "./Logo";
 
 const Header = () => {
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 p-5 bg-white shadow-md md:px-10">
 			{/* Left */}
 			<div className="relative flex items-center h-10 my-auto cursor-pointer">
-				<Link href="/">
-					<Image
-					src="https://links.papareact.com/2i6"          
-					fill
-					className="object-contain object-left"
-					alt="PrivacyGPT Logo"
-					/>
-				</Link>
+			<nav className="flex items-center justify-center">
+          <Link href="/" className="mr-4 relative group">
+            Home
+            <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
+                  group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
+              &nbsp;
+          </span>
+          </Link>
+          <Link href="/products" className="mr-4 relative group">
+            Products
+            <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
+                  group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
+              &nbsp;
+          </span>
+          </Link>
+          <Link href="/protected/client" className="mr-4 relative group">
+            Chat
+            <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
+                  group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
+              &nbsp;
+          </span>
+          </Link>
+        </nav>
 			</div>
 
 			{/* Mid - Links */}
@@ -23,7 +38,9 @@ const Header = () => {
 			
 
       <div className="flex justify-center">
-        <Link href='/protected/client'>Privacy J.A.R.V.I.S</Link>
+       		<div className="absolute left-[50%] top-2 translate-x-[-50%]">
+        <Logo />
+      </div>
 		
 			</div>
 

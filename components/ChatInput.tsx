@@ -59,7 +59,7 @@ function ChatInput({chatId}: Props) {
         );
         
         // Toast notification to say Loading
-        const notification = toast.loading('ChatGPT is thinking...');
+        const notification = toast.loading('AI is thinking...');
 
         await fetch("/api/askQuestion", {
             method: "POST",
@@ -76,7 +76,7 @@ function ChatInput({chatId}: Props) {
             //Toast notification to say successful
             console.log('prompt: hello world', prompt);
             console.log('session:', session);
-            toast.success('ChatGPT has responded',{id:notification});
+            toast.success('AI has responded',{id:notification});
             console.log('after prompt*************');
         });
     };

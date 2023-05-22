@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Multiselect from 'multiselect-react-dropdown';
+import TransitionEffect from 'all/app/TransitionEffect';
 
 function DpiaPage() {
   const pathname = usePathname();
@@ -84,7 +85,7 @@ function DpiaPage() {
           const secondText = ' requirements. First explain key ';
           const thirdText = ' requirements for this product then write top 10 data protection risks in numbered form and finally write 10 mitigations in bullet form. Make your answers to 2000 words and send your response in an HTML format so that I can copy that in an HTML code ';
           const combinedText = firstText + domain + secondText + domain + thirdText;
-          const notification = toast.loading('ChatGPT is thinking about ...' + domain);
+          const notification = toast.loading('AI is thinking about ...' + domain);
 
           await fetch('/api/createDpia', {
             method: 'POST',
@@ -100,7 +101,7 @@ function DpiaPage() {
             }),
           })
             .then(() => {
-              toast.success('ChatGPT has responded', { id: notification });
+              toast.success('AI has responded', { id: notification });
             })
             .catch((err) => {
               console.log('Error while calling API:', err);
@@ -121,16 +122,17 @@ function DpiaPage() {
 
   return (
     <div className="flex bg-white flex-col min-h-screen overflow-hidden">
+      <TransitionEffect />
       <div className="p-6">
         <h1 className="text-3xl font-bold mb-4">Confirm your DPIA preferences here</h1>
         <div className="p-8 flex-1 grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
           {Domains?.map(({ domain }: { domain: string }) => (
             <motion.div
               key={domain}
-              className={`flex items-center justify-center p-4 rounded-lg transition-colors duration-300 hover:bg-blue-500 ${
-                selectedDomains.includes(domain) ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black'
+              className={`flex items-center justify-center p-4 rounded-lg transition-colors duration-300 hover:rgba(131,58,180,1) ${
+                selectedDomains.includes(domain) ? 'bg-primary text-white' : 'bg-gray-100 text-black'
               }`}
-              style={{ borderColor: selectedDomains.includes(domain) ? '#2563eb' : 'transparent', borderWidth: '2px' }}
+              style={{ borderColor: selectedDomains.includes(domain) ? 'bg-primary' : 'transparent', borderWidth: '2px' }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleDomainSelection(domain)}
@@ -157,6 +159,8 @@ function DpiaPage() {
           ]}
         />
 
+        
+
 <div className="flex flex-col space-y-4">
           {prompts.map((prompt, index) => (
             <motion.div
@@ -167,7 +171,7 @@ function DpiaPage() {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <input
-                className="items-center py-2 border-b-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed h-20 flex-1 p-2 rounded-md resize-none"
+                className="items-center py-2 border-b-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed h-20 flex-1 p-2 rounded-md resize-none"
                 disabled={!session}
                 value={prompt}
                 onChange={(e) => handlePromptChange(index, e.target.value)}
@@ -255,7 +259,7 @@ function DpiaPage() {
         <button
           disabled={!session}
           type="submit"
-          className="bg-[#11A37F] hover:bg-[#0A845E] text-white font-bold py-3 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="bg-primary hover:rgba(131,58,180,1) text-white font-bold py-3 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           Submit
         </button>
