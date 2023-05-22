@@ -247,7 +247,7 @@ function DpiaPage() {
               checked={checkbox3}
               onChange={(e) => setCheckbox3(e.target.checked)}
             />
-            <label>Include Relavant Judgements</label>
+            <label>Include Relavant EU Judgements</label>
           </div>
         </div>
 
