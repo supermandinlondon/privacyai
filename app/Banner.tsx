@@ -29,6 +29,7 @@ const Banner = () => {
 					className="px-10 py-4 my-3 font-bold text-blue-500 transition duration-150 bg-white rounded-full shadow-md hover:shadow-xl active:scale-90">
 						Try J.A.R.V.I.S
         		</Link>
+				
 			</div>
 
 			<div className='absolute grid text-xl w-full text-white top-3/4  text-center'>

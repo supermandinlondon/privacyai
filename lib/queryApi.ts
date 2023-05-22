@@ -1,6 +1,12 @@
 import openai  from "./chatgpt";
 
-const query = async (prompt: string, chatId: string, model: string) =>{
+const queryGPT = async (prompt: string, chatId: string, model: string) =>{
+    
+    console.log("inside queryGPT function. passvalues are");
+    console.log("prompt :: "+ prompt);
+    console.log("chatId :: "+ chatId);
+    console.log("model  :: "+ model);
+
     const res = await openai
         .createCompletion({
             model,
@@ -19,6 +25,4 @@ const query = async (prompt: string, chatId: string, model: string) =>{
     return res;
 };
 
-console.log("inside queryAPI function . after query");
-
-export default query;
+export default queryGPT;

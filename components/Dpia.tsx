@@ -4,14 +4,17 @@ import { db } from "../firebase";
 import { collection, orderBy, query } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useCollection } from "react-firebase-hooks/firestore";
-import Message from "./Message";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/outline";
+import { motion, useMotionValue } from "framer-motion";
+
+
 
 type Props= {
-    chatId: string;
+    dpiaId: string;
 };
 
-function Chat({ chatId }: Props) { 
+function Dpia({ dpiaId }: Props) {
+  
+  
   const {data:session } = useSession();
 
   const [messages] = useCollection(
@@ -22,7 +25,7 @@ function Chat({ chatId }: Props) {
           "users", 
           session?.user?.email!, 
           "chats", 
-          chatId, 
+          dpiaId, 
           "messages"
         ),
       orderBy("createdAt", "asc")
@@ -30,24 +33,16 @@ function Chat({ chatId }: Props) {
   )
 
   
-
   return (
   
     <div className="flex-1 overflow-y-auto overflow-x-hidden">
-      {messages?.empty && (
-        <>
-          <p style={{ textAlign: "center" }}   className="mt-10 text-cnter text-white">
-            Type a prompt in below to get started!  
-          </p>  
-          <ArrowDownCircleIcon className="h-10 w-10 mx-auto mt-5
-          text-white animate-bounce"/>
-        </>
-      )}
-      {messages?.docs.map((message) => (
-        <Message key ={message.id} message ={message?.data()}/>
+      {messages?.docs.map((message) => ( 
+        <div className ="p-10 bg-yellow-200 border-2 m-2 shadow-lg">
+          <p>{message?.data().text}</p>
+      </div>
       ))}
     </div>
     );
 };
 
-export default Chat;
+export default Dpia;

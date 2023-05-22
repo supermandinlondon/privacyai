@@ -6,6 +6,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from 'all/firebase';
 import ChatRow from './ChatRow';
 import NewChat from './NewChat';
+import NewDpia from './NewDpia';
 import ModelSelection from './ModelSelection';
 
 
@@ -21,6 +22,8 @@ function SideBar() {
      <div className="p-2 flex flex-col h-screen">
         <div className="flex-1">
             <div> 
+            
+           
                 <NewChat/>
 
                 

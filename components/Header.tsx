@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import SignInButton from './SignInButton';
 import Image from 'next/image';
-
+import NewDpia from './NewDpia';
 
 const Header = () => {
   return (
@@ -24,6 +24,7 @@ const Header = () => {
 
       <div className="flex justify-center">
         <Link href='/protected/client'>Privacy J.A.R.V.I.S</Link>
+		
 			</div>
 
 			{/* Right */}
