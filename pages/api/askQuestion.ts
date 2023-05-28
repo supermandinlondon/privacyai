@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { adminDb } from 'all/firebaseAdmin';
-import queryGPT from '../../lib/queryApi';
+import query from '../../lib/queryApi';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import admin from "firebase-admin";
 

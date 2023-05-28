@@ -14,7 +14,9 @@ export default async function handler(
 ) {
     console.log("inside ask question api");
     const {prompt, productId, model, session, domain} = req.body;
-
+    const messages = [
+      { role: 'user', content: prompt }
+  ];
    
     console.log("prompt :: "+ prompt);
     console.log("chatId :: "+ productId);
@@ -33,7 +35,7 @@ export default async function handler(
 
     // ChatGPT Query 
 
-    const response = await query(prompt, productId, model);
+    const response = await query(prompt, productId, model, messages);
     
     //const response= domain + "_hello_ "+productId;
 

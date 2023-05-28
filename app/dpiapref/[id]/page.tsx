@@ -76,7 +76,7 @@ function DpiaPage() {
       console.log('New DPIA placeholder added');
       console.log('Passed product ID to function is: ' + productId);
       
-      const model = 'text-davinci-003';
+      const model = 'gpt-4';
 
       for (const { domain } of Domains) {
         if (selectedDomains.includes(domain)) {

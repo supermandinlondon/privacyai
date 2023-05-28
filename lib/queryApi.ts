@@ -15,7 +15,7 @@ const query = async (
     // Build the API request payload based on the selected model
     if (model === "gpt-3.5-turbo" || model === "gpt-4") {
       
-        // Use createChatCompletion for gpt-3.5-turbo and gpt-4
+      // Use createChatCompletion for gpt-3.5-turbo and gpt-4
       const res = await openai
         .createChatCompletion({
           model: model,
