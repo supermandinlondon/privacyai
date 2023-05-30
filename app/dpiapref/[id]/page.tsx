@@ -1,30 +1,16 @@
 "use client"
-import React, { useState, FormEvent } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Multiselect from 'multiselect-react-dropdown';
 import TransitionEffect from 'all/app/TransitionEffect';
+import { useProductContext } from 'all/app/ProductContext';
+import { motion } from 'framer-motion';
+
 
 function DpiaPage() {
-  const pathname = usePathname();
-  if (!pathname) return null;
-
-  const parts = pathname.split('/');
-  const productId = parts[parts.length - 1];
-
-  const Domains = [
-    { domain: 'Transparency' },
-    { domain: 'Fairness' },
-    { domain: 'Purpose Limitation' },
-    { domain: 'Data Subject Rights' },
-    { domain: 'Breach' },
-    { domain: 'Deletion' },
-    { domain: 'Privacy for Security' },
-    { domain: 'Privacy By Design and Default' }
-  ];
-
   const router = useRouter();
   const { data: session } = useSession();
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
@@ -32,7 +18,14 @@ function DpiaPage() {
   const [checkbox1, setCheckbox1] = useState(false);
   const [checkbox2, setCheckbox2] = useState(false);
   const [checkbox3, setCheckbox3] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<any[]>([]); // <-- Add state for selected options
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+  const { selectedProduct } = useProductContext();
+
+  useEffect(() => {
+    if (selectedProduct) {
+      console.log('Selected Product:', selectedProduct);
+    }
+  }, [selectedProduct]);
 
   const handleDomainSelection = (domain: string) => {
     setSelectedDomains((prevSelectedDomains: string[]) => {
@@ -64,19 +57,18 @@ function DpiaPage() {
     });
   };
 
-  const createNewDpia = async (e: FormEvent<HTMLFormElement>) => {
+  const createNewDpia = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
-      e.preventDefault();
       const validPrompts = prompts.filter((prompt) => prompt.trim() !== '');
       console.log('Domains:', selectedDomains);
       console.log('Prompts:', validPrompts);
       console.log('Checkbox 1:', checkbox1);
       console.log('Checkbox 2:', checkbox2);
       console.log('Checkbox 3:', checkbox3);
-      console.log('Selected Options:', selectedOptions.map(option => option.key)); // <-- Print selected values
-      console.log('New DPIA placeholder added');
-      console.log('Passed product ID to function is: ' + productId);
-      
+      console.log('Selected Options:', selectedOptions.map((option) => option.key));
+
       const model = 'text-davinci-003';
 
       for (const { domain } of Domains) {
@@ -94,7 +86,7 @@ function DpiaPage() {
             },
             body: JSON.stringify({
               prompt: combinedText,
-              productId,
+              productId: selectedProduct?.id,
               model,
               session,
               domain,
@@ -106,25 +98,58 @@ function DpiaPage() {
             .catch((err) => {
               console.log('Error while calling API:', err);
             });
-            // Reset selected options
-      setSelectedOptions([]);
+
+          setSelectedOptions([]); // Reset selected options
         }
       }
 
-      router.push(`/dpia/${productId}`);
-      console.log('After routing');
+      router.push(`/dpia/${selectedProduct?.id}`);
     } catch (error) {
-      console.log('Errorrrrr');
       console.error(error);
     }
   };
 
+  const Domains = [
+    { domain: 'Transparency' },
+    { domain: 'Fairness' },
+    { domain: 'Purpose Limitation' },
+    { domain: 'Data Subject Rights' },
+    { domain: 'Breach' },
+    { domain: 'Deletion' },
+    { domain: 'Privacy for Security' },
+    { domain: 'Privacy By Design and Default' },
+  ];
 
   return (
-    <div className="flex bg-white flex-col min-h-screen overflow-hidden">
+    <div className="flex bg-white flex-col min-h-screen overflow-hidden px-4 sm:px-8">
       <TransitionEffect />
       <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">Confirm your DPIA preferences here</h1>
+      <h1 className="text-3xl font-bold mb-4"> Selected Product </h1>
+
+      
+      {selectedProduct ? (
+        <div className="p-6">
+          <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+          <p>{selectedProduct.desc}</p>
+          <div className="flex justify-center">
+                  <img src={selectedProduct.image} alt="" className="h-26 w-26 align-middle" />
+                </div>
+                <p className="mb-2 font-semibold">Features</p>
+                <ul>
+                  {selectedProduct.features.map((requirement: string, index: number) => (
+                    <li key={index} className="mb-1 text-xs">
+                      {`${index + 1}. ${requirement}`}
+                    </li>
+                  ))}
+                </ul>
+        </div>
+      ) : (
+        <div className="p-6">
+          <p>No product selected.</p>
+        </div>
+      )}
+
+        <h1 className="text-3xl font-bold mb-4"> Configure DPIA preferences </h1>
         <div className="p-8 flex-1 grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
           {Domains?.map(({ domain }: { domain: string }) => (
             <motion.div
@@ -199,7 +224,7 @@ function DpiaPage() {
             </motion.div>
           ))}
           <motion.div
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 "
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: prompts.length * 0.1 }}

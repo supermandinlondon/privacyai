@@ -12,7 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-    console.log("inside ask question api");
+    console.log("inside createDPIA api");
     const {prompt, productId, model, session, domain} = req.body;
 
    
@@ -34,29 +34,16 @@ export default async function handler(
     // ChatGPT Query 
 
     const response = await query(prompt, productId, model);
-    
-    //const response= domain + "_hello_ "+productId;
-
+  
     const message: Message = {
-        text: response || "ChatGPT was unable to find the answer of that!",
+        text: response || "AI was unable to find the answer of that!",
         createdAt: admin.firestore.Timestamp.now(),
         user:{
-            _id:"ChatGPT",
-            name: "ChatGPT",
+            _id:"AI",
+            name: "AI",
             avatar: "https://brandlogovector.com/wp-content/uploads/2023/01/ChatGPT-Icon-Logo-PNG.png"
         },
     };
-
-/* 
-    await adminDb
-        .collection('users')
-        .doc(session?.user?.email)
-        .collection("products")'message
-        .doc(productId)
-        .collection("dpias")
-        .add(message)
-
-     */
 
         await adminDb
         .collection('users')

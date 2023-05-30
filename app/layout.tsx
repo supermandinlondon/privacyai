@@ -1,3 +1,5 @@
+
+
 import Header from 'all/components/Header'
 import Footer from './Footer'
 import { Inter } from 'next/font/google'
@@ -7,6 +9,7 @@ import ClientProvider from 'all/components/ClientProvider';
 import Head from './head';
 import {getServerSession} from "next-auth";
 import { authOptions } from 'all/pages/api/auth/[...nextauth]';
+import { ProductProvider } from './ProductContext';
 
 
 
@@ -24,9 +27,10 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <Header/>
-            
+          <ProductProvider>
             <ClientProvider/>          
             <div >{children}</div>
+            </ProductProvider>
           <Footer/>
         </SessionProvider>
       </body>

@@ -84,11 +84,11 @@ const SignInButton = () => {
                   <Link
                     href='/profile'
                     className={clsx(
-                      active && 'bg-stone-700/50 dark:bg-stone-200',
-                      'inline-flex items-center gap-6 px-[34px] py-2 text-sm text-stone-400 dark:text-stone-500'
+                      active && 'bg-primary dark:bg-stone-200',
+                      'inline-flex items-center gap-6 px-[34px] py-2 text-sm text-black dark:text-stone-500'
                     )}
                   >
-                    <Cog8ToothIcon className='h-5 w-5 text-stone-400' />
+                    <Cog8ToothIcon className='h-5 w-5 text-black' />
                     <span>Manage Account</span>
                   </Link>
                 )}
@@ -97,12 +97,12 @@ const SignInButton = () => {
                 {({ active }) => (
                   <button
                     className={clsx(
-                      active && 'bg-stone-700/50 dark:bg-stone-200',
-                      'inline-flex items-center gap-6 px-[34px] py-2 text-sm text-stone-400 dark:text-stone-500'
+                      active && 'bg-primary dark:bg-stone-200',
+                      'inline-flex items-center gap-6 px-[34px] py-2 text-sm text-black dark:text-stone-500'
                     )}
                     onClick={() => signOut()}
                   >
-                    <ArrowRightOnRectangleIcon className='h-5 w-5 text-stone-400' />
+                    <ArrowRightOnRectangleIcon className='h-5 w-5 text-black' />
                     <span>Sign Out</span>
                   </button>
                 )}

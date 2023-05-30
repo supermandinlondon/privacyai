@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import { collection, query, doc, getDocs } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { Listbox } from "@headlessui/react";
+import { useProductContext } from 'all/app/ProductContext';
 
 type Props = {
   dpiaId: string;
@@ -22,10 +23,16 @@ function Dpia2({ dpiaId }: Props) {
   const [domains, setDomains] = useState<Domain[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { selectedProduct } = useProductContext();
+
+  useEffect(() => {
+    if (selectedProduct) {
+      console.log('Selected Product:', selectedProduct);
+    }
+  }, [selectedProduct]);
+
   useEffect(() => {
     const fetchDomains = async () => {
-   
-
       const Domains = [
         { domain: 'Transparency' , values: ["11", "21", "31"]},
         { domain: 'Fairness', values: ["11", "21", "31"] },
@@ -84,73 +91,98 @@ function Dpia2({ dpiaId }: Props) {
           <div className="text-gray-600 font-semibold">Loading...</div>
         </div>
       ) : (
-        domains.map(({ domain, domainValues, selectedValue }, index) => (
-          <motion.div
-            key={`${domain}_${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="p-6 bg-white rounded-lg shadow-lg mb-4"
-          >
-            <h2 className="text-2xl font-bold mb-4">{domain}</h2>
-            <div className="flex items-center space-x-4">
-            <div className="text-gray-900 font-medium flex-grow">
-    {selectedValue ? (
-      <div dangerouslySetInnerHTML={{ __html: selectedValue }} />
-    ) : (
-      <span className="text-gray-400">No value selected</span>
-    )}
-  </div>
-              <Listbox
-                value={selectedValue}
-                onChange={(value) => handleDropdownChange(value, domain)}
-              >
-                <div className="relative">
-                  <Listbox.Button className="relative bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    <span className="block truncate">
-                      {selectedValue ? "Versions" : "Latest Value"}
-                    </span>
-                   
-                  </Listbox.Button>
-                  <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                    {domainValues.map((value, index) => (
-                      <Listbox.Option
-                        key={`${domain}_${index}`}
-                        value={value}
-                        className={({ active }) =>
-                          `${
-                            active ? "text-white bg-blue-500" : "text-gray-900"
-                          } cursor-default select-none relative py-2 pl-10 pr-4`
-                        }
-                      >
-                        {({ selected, active }) => (
-                          <>
-                            <span
-                              className={`${
-                                selected ? "font-medium" : "font-normal"
-                              } block truncate`}
-                            >
-                              {index + 1}
-                            </span>
-                            {selected && (
+        <>
+          <div className="p-6">
+            <h1 className="text-3xl font-bold mb-4">Selected Product</h1>
+            {selectedProduct ? (
+              <div>
+                <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+                <p>{selectedProduct.desc}</p>
+                <div className="flex justify-center">
+                  <img src={selectedProduct.image} alt="" className="h-26 w-26 align-middle" />
+                </div>
+                <p className="mb-2 font-semibold">Features</p>
+                <ul>
+                  {selectedProduct.features.map((requirement: string, index: number) => (
+                    <li key={index} className="mb-1 text-xs">
+                      {`${index + 1}. ${requirement}`}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="p-6">
+                <p>No product selected.</p>
+              </div>
+            )}
+          </div>
+
+          {domains.map(({ domain, domainValues, selectedValue }, index) => (
+            <motion.div
+              key={`${domain}_${index}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="p-6 bg-white rounded-lg shadow-lg mb-4"
+            >
+              <h2 className="text-2xl font-bold mb-4">{domain}</h2>
+              <div className="flex items-center space-x-4">
+                <div className="text-gray-900 font-medium flex-grow">
+                  {selectedValue ? (
+                    <div dangerouslySetInnerHTML={{ __html: selectedValue }} />
+                  ) : (
+                    <span className="text-gray-400">No value selected</span>
+                  )}
+                </div>
+                <Listbox
+                  value={selectedValue}
+                  onChange={(value) => handleDropdownChange(value, domain)}
+                >
+                  <div className="relative">
+                    <Listbox.Button className="relative bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                      <span className="block truncate">
+                        {selectedValue ? "Versions" : "Latest Value"}
+                      </span>
+                    </Listbox.Button>
+                    <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                      {domainValues.map((value, index) => (
+                        <Listbox.Option
+                          key={`${domain}_${index}`}
+                          value={value}
+                          className={({ active }) =>
+                            `${
+                              active ? "text-white bg-blue-500" : "text-gray-900"
+                            } cursor-default select-none relative py-2 pl-10 pr-4`
+                          }
+                        >
+                          {({ selected, active }) => (
+                            <>
                               <span
                                 className={`${
-                                  active ? "text-white" : "text-blue-500"
-                                } absolute inset-y-0 left-0 flex items-center pl-3`}
+                                  selected ? "font-medium" : "font-normal"
+                                } block truncate`}
                               >
-                              
+                                {index + 1}
                               </span>
-                            )}
-                          </>
-                        )}
-                      </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
-                </div>
-              </Listbox>
-            </div>
-          </motion.div>
-        ))
+                              {selected && (
+                                <span
+                                  className={`${
+                                    active ? "text-white" : "text-blue-500"
+                                  } absolute inset-y-0 left-0 flex items-center pl-3`}
+                                >
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </div>
+                </Listbox>
+              </div>
+            </motion.div>
+          ))}
+        </>
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import openai  from "./chatgpt";
 
-const queryGPT = async (prompt: string, chatId: string, model: string) =>{
+const queryGPT = async (prompt: string, Id: string, model: string) =>{
     
-    console.log("inside queryGPT function. passvalues are");
+    console.log("inside queryAPI function. passed values are");
     console.log("prompt :: "+ prompt);
-    console.log("chatId :: "+ chatId);
+    console.log("Id :: "+ Id);
     console.log("model  :: "+ model);
 
     const res = await openai
