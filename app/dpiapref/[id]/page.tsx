@@ -172,7 +172,7 @@ function DpiaPage() {
             toast.success('AI has responded', { id: medianotification });
           })
           .catch((err) => {
-            console.log('Error while calling API:', err);
+            console.log('Error while calling API 1:', err);
           });
          
            
