@@ -31,9 +31,8 @@ function ChatInput({chatId}: Props) {
         const legalTextPart =  ' As part of your response, include any analysis that is relevant to these new legal decisions: GDPR, DMA, DSA' ;
         const formatText = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability. ';
 
-        const combinedText = baseText + prompt + legalTextPart + formatText;
-
-
+       const combinedText = baseText + prompt + legalTextPart + formatText;
+    
         setPrompt("");
         
         const message: Message ={
@@ -52,7 +51,7 @@ function ChatInput({chatId}: Props) {
         );
         
         // Toast notification to say Loading
-        const notification = toast.loading('ChatGPT is thinking...');
+        const notification = toast.loading('AI is thinking...');
 
         await fetch("/api/askQuestion", {
             method: "POST",
@@ -70,7 +69,7 @@ function ChatInput({chatId}: Props) {
             //Toast notification to say successful
             console.log('prompt: hello world', prompt);
             console.log('session:', session);
-            toast.success('ChatGPT has responded',{id:notification});
+            toast.success('AI has responded',{id:notification});
             console.log('after prompt*************');
         });
     };

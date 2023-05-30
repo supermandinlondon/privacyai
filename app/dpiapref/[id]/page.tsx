@@ -1,37 +1,36 @@
 "use client"
-import React, { useState, FormEvent } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Multiselect from 'multiselect-react-dropdown';
+import TransitionEffect from 'all/app/TransitionEffect';
+import { useProductContext } from 'all/app/ProductContext';
+import { motion } from 'framer-motion';
+import projectConfig from 'all/lib/projectConfig';
+
 
 function DpiaPage() {
-  const pathname = usePathname();
-  if (!pathname) return null;
-
-  const parts = pathname.split('/');
-  const productId = parts[parts.length - 1];
-
-  const Domains = [
-    { domain: 'Transparency' },
-    { domain: 'Fairness' },
-    { domain: 'Purpose Limitation' },
-    { domain: 'Data Subject Rights' },
-    { domain: 'Breach' },
-    { domain: 'Deletion' },
-    { domain: 'Privacy for Security' },
-    { domain: 'Privacy By Design and Default' }
-  ];
-
   const router = useRouter();
   const { data: session } = useSession();
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [prompts, setPrompts] = useState<string[]>(['']);
-  const [checkbox1, setCheckbox1] = useState(false);
-  const [checkbox2, setCheckbox2] = useState(false);
-  const [checkbox3, setCheckbox3] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<any[]>([]); // <-- Add state for selected options
+  const [regEnfcheckbox, setregEnfcheckbox] = useState(false);
+  const [mediaCheckbox, setmediaCheckbox] = useState(false);
+  const [euCheckbox, seteuCheckbox] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+  const { selectedProduct } = useProductContext();
+  const context = projectConfig.role+(selectedProduct ? selectedProduct.name : "unknown")+ '.  ' +(selectedProduct ? selectedProduct.desc : "unknown");
+  const dpiaInstruction = projectConfig.dpiaInstruction;
+  const domainInstruction = projectConfig.domainInstruction;
+
+
+  useEffect(() => {
+    if (selectedProduct) {
+      console.log('Selected Product:', selectedProduct);
+    }
+  }, [selectedProduct]);
 
   const handleDomainSelection = (domain: string) => {
     setSelectedDomains((prevSelectedDomains: string[]) => {
@@ -63,74 +62,242 @@ function DpiaPage() {
     });
   };
 
-  const createNewDpia = async (e: FormEvent<HTMLFormElement>) => {
+  const createNewDpia = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
-      e.preventDefault();
       const validPrompts = prompts.filter((prompt) => prompt.trim() !== '');
       console.log('Domains:', selectedDomains);
       console.log('Prompts:', validPrompts);
-      console.log('Checkbox 1:', checkbox1);
-      console.log('Checkbox 2:', checkbox2);
-      console.log('Checkbox 3:', checkbox3);
-      console.log('Selected Options:', selectedOptions.map(option => option.key)); // <-- Print selected values
-      console.log('New DPIA placeholder added');
-      console.log('Passed product ID to function is: ' + productId);
+      console.log('Checkbox 1:', regEnfcheckbox);
+      console.log('Checkbox 2:', mediaCheckbox);
+      console.log('Checkbox 3:', euCheckbox);
+      console.log('Selected Options:', selectedOptions.map((option) => option.key));
+
+      const model = 'text-davinci-003';
+
+
+      validPrompts.forEach(async (additionalAssessment, index) => {
+        console.log(`Prompt ${index + 1}: ${additionalAssessment}`);
+
+        const customPrompt = additionalAssessment + 'the answer should be in context of proudct' +projectConfig.regenfInstruction ;
+        const customArea = 'Additional Assessment';
+        console.log("additionalAssessment"+additionalAssessment);
+        console.log("customArea"+customArea);
+        console.log("productID"+selectedProduct?.id);
+        const customnotification = toast.loading('AI is thinking about ...' + customArea);
+        
       
-      const model = 'gpt-4';
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: customPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: customArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: customnotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+
+      });
+      
+
+      if(regEnfcheckbox){
+
+        const regEnfPrompt = context +  projectConfig.regenfInstruction ;
+        const regEnfArea = 'Relavant Regulatory Enforcement';
+        console.log("regEnfPrompt"+regEnfPrompt);
+        console.log("regEnfArea"+regEnfArea);
+        console.log("productID"+selectedProduct?.id);
+        const regenfnotification = toast.loading('AI is thinking about ...' + regEnfArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: regEnfPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: regEnfArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: regenfnotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+           
+      }
+
+      if(mediaCheckbox){
+
+        const mediaPrompt = context +  projectConfig.mediaInstruction ;
+        const mediaArea = "Relavant Media Coverage"
+        console.log("mediaPrompt"+mediaPrompt);
+        console.log("mediaArea"+mediaArea);
+        console.log("productID"+selectedProduct?.id);
+        const medianotification = toast.loading('AI is thinking about ...' + mediaArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: mediaPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: mediaArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: medianotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API 1:', err);
+          });
+         
+           
+      }
+     
+      if(euCheckbox){
+
+        const euPrompt = context +  projectConfig.euInstruction ;
+        const euArea = "Relavant EU Judgement"
+        console.log("euPrompt"+euPrompt);
+        console.log("euArea"+euArea);
+        console.log("productID"+selectedProduct?.id);
+        const eunotification = toast.loading('AI is thinking about ...' + euArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: euPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: euArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: eunotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+           
+      }
+
 
       for (const { domain } of Domains) {
         if (selectedDomains.includes(domain)) {
-          const firstText = 'You are a data protection officer for Facebook. The company is launching a product which is similar to the Apple Watch. We are calling it TWatch. Can you create a data protection impact assessment (DPIA) to assess potential data protection risk associated with this product and suggest mitigation. Focus on assessing GDPR ';
-          const secondText = ' requirements. First explain key ';
-          const thirdText = ' requirements for this product then write top 10 data protection risks in numbered form and finally write 10 mitigations in bullet form. Make your answers to 2000 words and send your response in an HTML format so that I can copy that in an HTML code ';
-          const combinedText = firstText + domain + secondText + domain + thirdText;
-          const notification = toast.loading('ChatGPT is thinking about ...' + domain);
-
-          await fetch('/api/createDpia', {
+          const domainPrompt = context + dpiaInstruction + domain + domainInstruction;
+          const notification = toast.loading('AI is thinking about ...' + domain);
+          console.log(domainPrompt);
+           await fetch('/api/createDpia', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              prompt: combinedText,
-              productId,
+              prompt: domainPrompt,
+              productId: selectedProduct?.id,
               model,
               session,
               domain,
             }),
-          })
+           })
             .then(() => {
-              toast.success('ChatGPT has responded', { id: notification });
+              toast.success('AI has responded', { id: notification });
             })
             .catch((err) => {
               console.log('Error while calling API:', err);
             });
-            // Reset selected options
-      setSelectedOptions([]);
+
+           
+
+          setSelectedOptions([]); // Reset selected options
         }
       }
 
-      router.push(`/dpia/${productId}`);
-      console.log('After routing');
+      router.push(`/dpia/${selectedProduct?.id}`);
     } catch (error) {
-      console.log('Errorrrrr');
       console.error(error);
     }
   };
 
+  const Domains = [
+    { domain: 'Transparency' },
+    { domain: 'Fairness' },
+    { domain: 'Purpose Limitation' },
+    { domain: 'Data Subject Rights' },
+    { domain: 'Breach' },
+    { domain: 'Deletion' },
+    { domain: 'Privacy for Security' },
+    { domain: 'Privacy By Design and Default' },
+  ];
 
   return (
-    <div className="flex bg-white flex-col min-h-screen overflow-hidden">
+    <div className="flex bg-white flex-col min-h-screen overflow-hidden px-4 sm:px-8">
+      <TransitionEffect />
       <div className="p-6">
-        <h1 className="text-3xl font-bold mb-4">Confirm your DPIA preferences here</h1>
+      <h1 className="text-3xl font-bold mb-4"> Selected Product </h1>
+
+      
+      {selectedProduct ? (
+        <div className="p-6">
+          <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+          <p>{selectedProduct.desc}</p>
+          <div className="flex justify-center">
+                  <img src={selectedProduct.image} alt="" className="h-26 w-26 align-middle" />
+                </div>
+                <p className="mb-2 font-semibold">Features</p>
+                <ul>
+                  {selectedProduct.features.map((requirement: string, index: number) => (
+                    <li key={index} className="mb-1 text-xs">
+                      {`${index + 1}. ${requirement}`}
+                    </li>
+                  ))}
+                </ul>
+        </div>
+      ) : (
+        <div className="p-6">
+          <p>No product selected.</p>
+        </div>
+      )}
+
+        <h1 className="text-3xl font-bold mb-4"> Configure DPIA preferences </h1>
         <div className="p-8 flex-1 grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
           {Domains?.map(({ domain }: { domain: string }) => (
             <motion.div
               key={domain}
-              className={`flex items-center justify-center p-4 rounded-lg transition-colors duration-300 hover:bg-blue-500 ${
-                selectedDomains.includes(domain) ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black'
+              className={`flex items-center justify-center p-4 rounded-lg transition-colors duration-300 hover:rgba(131,58,180,1) ${
+                selectedDomains.includes(domain) ? 'bg-primary text-white' : 'bg-gray-100 text-black'
               }`}
-              style={{ borderColor: selectedDomains.includes(domain) ? '#2563eb' : 'transparent', borderWidth: '2px' }}
+              style={{ borderColor: selectedDomains.includes(domain) ? 'bg-primary' : 'transparent', borderWidth: '2px' }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleDomainSelection(domain)}
@@ -157,6 +324,8 @@ function DpiaPage() {
           ]}
         />
 
+        
+
 <div className="flex flex-col space-y-4">
           {prompts.map((prompt, index) => (
             <motion.div
@@ -167,7 +336,7 @@ function DpiaPage() {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <input
-                className="items-center py-2 border-b-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed h-20 flex-1 p-2 rounded-md resize-none"
+                className="items-center py-2 border-b-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-fuchsia-600 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed h-20 flex-1 p-2 rounded-md resize-none"
                 disabled={!session}
                 value={prompt}
                 onChange={(e) => handlePromptChange(index, e.target.value)}
@@ -195,7 +364,7 @@ function DpiaPage() {
             </motion.div>
           ))}
           <motion.div
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 "
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: prompts.length * 0.1 }}
@@ -224,30 +393,30 @@ function DpiaPage() {
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox1}
-              onChange={(e) => setCheckbox1(e.target.checked)}
+              checked={regEnfcheckbox}
+              onChange={(e) => setregEnfcheckbox(e.target.checked)}
             />
-            <label>Checkbox 1</label>
+            <label>Relavant Regulatory Enforcement</label>
           </div>
 
           <div className="flex items-center space-x-2">
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox2}
-              onChange={(e) => setCheckbox2(e.target.checked)}
+              checked={mediaCheckbox}
+              onChange={(e) => setmediaCheckbox(e.target.checked)}
             />
-            <label>Checkbox 2</label>
+            <label>Include Relavant Media Coverage</label>
           </div>
 
           <div className="flex items-center space-x-2">
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox3}
-              onChange={(e) => setCheckbox3(e.target.checked)}
+              checked={euCheckbox}
+              onChange={(e) => seteuCheckbox(e.target.checked)}
             />
-            <label>Checkbox 3</label>
+            <label>Include Relavant EU Judgements</label>
           </div>
         </div>
 
@@ -255,7 +424,7 @@ function DpiaPage() {
         <button
           disabled={!session}
           type="submit"
-          className="bg-[#11A37F] hover:bg-[#0A845E] text-white font-bold py-3 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="bg-primary hover:rgba(131,58,180,1) text-white font-bold py-3 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           Submit
         </button>
