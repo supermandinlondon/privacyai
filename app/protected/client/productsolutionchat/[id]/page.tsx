@@ -7,7 +7,7 @@ type Props= {
     }
 }
 
-function ProductSolution({params: {id}}: Props) {
+function ProductSolutionPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <Chat chatId ={id}/>
@@ -16,4 +16,4 @@ function ProductSolution({params: {id}}: Props) {
   );
 }
 
-export default ProductSolution;
+export default ProductSolutionPage;

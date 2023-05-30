@@ -1,5 +1,5 @@
 import Chat from "all/components/Chat";
-import RiskAssessmentInput from "all/components/ProductSolutionInput";
+import ProductSolutionInput from "all/components/ProductSolutionInput";
 
 type Props= {
     params: {
@@ -11,7 +11,7 @@ function ProductSolutionPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <Chat chatId ={id}/>
-        <RiskAssessmentInput chatId ={id}/>
+        <ProductSolutionInput chatId ={id}/>
     </div>
   );
 }
