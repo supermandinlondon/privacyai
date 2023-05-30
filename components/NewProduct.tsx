@@ -15,6 +15,7 @@ import TransitionEffect from 'all/app/TransitionEffect';
 
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { ProductProvider, useProductContext } from 'all/app/ProductContext';
+import { EyeIcon } from '@heroicons/react/24/outline';
 
 function NewProduct() {
   const router = useRouter();
@@ -73,6 +74,35 @@ function NewProduct() {
     }
   };
 
+
+  const viewDpia = async (productId: string) => {
+    try {
+      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
+      const productDocSnap = await getDoc(productDocRef);
+      const productData = productDocSnap.data();
+
+      if (productData) {
+        const selectedProductData = {
+          id: productId,
+          name: productData.name,
+          image: productData.image,
+          desc: productData.desc,
+          features: productData.requirements,
+        };
+
+        setSelectedProduct(selectedProductData);
+
+        console.log('Selected Product777:', setSelectedProduct);
+        router.push(`/dpia/${productId}`);
+        console.log('after routing');
+      } else {
+        console.log('Product not found');
+      }
+    } catch (error) {
+      console.log('errorrrrr');
+      console.error(error);
+    }
+  };
   return (
       
       <div className="p-8">
@@ -104,8 +134,10 @@ function NewProduct() {
               exit={{ scale: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
               className="p-6 bg-white rounded-md hover:bg-black hover:text-white shadow-lg cursor-pointer"
-              onClick={() => createNewDpia(product.id)}
+              
             >
+             
+              
               <div className="flex items-center justify-between mb-5">
                 <p className="text-lg hover:text-white font-semibold">{product.data().name}</p>
                 <motion.div
@@ -118,6 +150,20 @@ function NewProduct() {
                   <PlusIcon className="w-5 h-5 mr-2" />
                   <p>Create DPIA</p>
                 </motion.div>
+
+                <motion.div
+          className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+          whileHover={{
+            backgroundColor: ['#121212', 'rgba(131,58,180,1)', 'rgba(253,29,29,1)', 'rgba(252,176,69,1)', 'rgba(131,58,180,1)', '#121212'],
+            transition: { duration: 1, repeat: Infinity },
+          }}
+          onClick={() => viewDpia(product.id)} // Call the viewDpia function on button click
+        >
+          <EyeIcon className="w-5 h-5 mr-2" />
+           <p>View DPIA</p>
+        </motion.div>
+
+
               </div>
               <div className="border-t border-gray-300 mt-4 pt-4">
                 <p className="mb-2 from-neutral-500 text-sm align-middle text-justify"> {product.data().desc}</p>

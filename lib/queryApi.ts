@@ -20,7 +20,7 @@ const queryGPT = async (prompt: string, Id: string, model: string) =>{
     .then((res)=> res.data.choices[0].text)
     .catch(
         (err) => 
-        `error:  chatGPT was unable to find an answer for thatnn! (Error: ${err.message} and prompt was ${prompt} and openAPI object was ${openai} and openAPI model was ${model})`
+        `error:  chatGPT was unable to find an answer for that! (Error: ${err.message} )`
         );
     return res;
 };

@@ -38,9 +38,8 @@ function ChatInput({chatId}: Props) {
         const legalTextPart =  ' As part of your response, include any analysis that is relevant to these new legal decisions: GDPR, DMA, DSA' ;
         const formatText = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability. ';
 
-        const combinedText = baseText + prompt + legalTextPart + formatText;
-
-
+       const combinedText = baseText + prompt + legalTextPart + formatText;
+    
         setPrompt("");
         
         const message: Message ={

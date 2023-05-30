@@ -24,13 +24,7 @@ const Banner = () => {
         <div className="pt-0 md:pt-4 sm:pt-4 w-full h-full inline-block z-0 bg-light p-32 dark:bg-dark xl:p-24 lg:p-12 md:p-12 sm:p-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between w-full">
             <div className="w-full lg:w-1/2">
-              <Image
-                src={homePic}
-                alt="PrivacyAI"
-                className="w-full h-auto md:inline-block"
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-              />
+             
             </div>
             <div className="w-full my-10 lg:w-1/2 flex flex-col items-start lg:items-end lg:text-right">
               <AnimatedText

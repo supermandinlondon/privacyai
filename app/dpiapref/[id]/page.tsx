@@ -8,6 +8,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import TransitionEffect from 'all/app/TransitionEffect';
 import { useProductContext } from 'all/app/ProductContext';
 import { motion } from 'framer-motion';
+import projectConfig from 'all/lib/projectConfig';
 
 
 function DpiaPage() {
@@ -15,11 +16,15 @@ function DpiaPage() {
   const { data: session } = useSession();
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [prompts, setPrompts] = useState<string[]>(['']);
-  const [checkbox1, setCheckbox1] = useState(false);
-  const [checkbox2, setCheckbox2] = useState(false);
-  const [checkbox3, setCheckbox3] = useState(false);
+  const [regEnfcheckbox, setregEnfcheckbox] = useState(false);
+  const [mediaCheckbox, setmediaCheckbox] = useState(false);
+  const [euCheckbox, seteuCheckbox] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const { selectedProduct } = useProductContext();
+  const context = projectConfig.role+(selectedProduct ? selectedProduct.name : "unknown")+ '.  ' +(selectedProduct ? selectedProduct.desc : "unknown");
+  const dpiaInstruction = projectConfig.dpiaInstruction;
+  const domainInstruction = projectConfig.domainInstruction;
+
 
   useEffect(() => {
     if (selectedProduct) {
@@ -64,40 +69,175 @@ function DpiaPage() {
       const validPrompts = prompts.filter((prompt) => prompt.trim() !== '');
       console.log('Domains:', selectedDomains);
       console.log('Prompts:', validPrompts);
-      console.log('Checkbox 1:', checkbox1);
-      console.log('Checkbox 2:', checkbox2);
-      console.log('Checkbox 3:', checkbox3);
+      console.log('Checkbox 1:', regEnfcheckbox);
+      console.log('Checkbox 2:', mediaCheckbox);
+      console.log('Checkbox 3:', euCheckbox);
       console.log('Selected Options:', selectedOptions.map((option) => option.key));
 
       const model = 'text-davinci-003';
 
+
+      validPrompts.forEach(async (additionalAssessment, index) => {
+        console.log(`Prompt ${index + 1}: ${additionalAssessment}`);
+
+        const customPrompt = additionalAssessment + 'the answer should be in context of proudct' +projectConfig.regenfInstruction ;
+        const customArea = 'Additional Assessment';
+        console.log("additionalAssessment"+additionalAssessment);
+        console.log("customArea"+customArea);
+        console.log("productID"+selectedProduct?.id);
+        const customnotification = toast.loading('AI is thinking about ...' + customArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: customPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: customArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: customnotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+
+      });
+      
+
+      if(regEnfcheckbox){
+
+        const regEnfPrompt = context +  projectConfig.regenfInstruction ;
+        const regEnfArea = 'Relavant Regulatory Enforcement';
+        console.log("regEnfPrompt"+regEnfPrompt);
+        console.log("regEnfArea"+regEnfArea);
+        console.log("productID"+selectedProduct?.id);
+        const regenfnotification = toast.loading('AI is thinking about ...' + regEnfArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: regEnfPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: regEnfArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: regenfnotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+           
+      }
+
+      if(mediaCheckbox){
+
+        const mediaPrompt = context +  projectConfig.mediaInstruction ;
+        const mediaArea = "Relavant Media Coverage"
+        console.log("mediaPrompt"+mediaPrompt);
+        console.log("mediaArea"+mediaArea);
+        console.log("productID"+selectedProduct?.id);
+        const medianotification = toast.loading('AI is thinking about ...' + mediaArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: mediaPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: mediaArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: medianotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+           
+      }
+     
+      if(euCheckbox){
+
+        const euPrompt = context +  projectConfig.euInstruction ;
+        const euArea = "Relavant EU Judgement"
+        console.log("euPrompt"+euPrompt);
+        console.log("euArea"+euArea);
+        console.log("productID"+selectedProduct?.id);
+        const eunotification = toast.loading('AI is thinking about ...' + euArea);
+        
+      
+        await fetch('/api/createDpia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: euPrompt,
+            productId: selectedProduct?.id,
+            model,
+            session,
+            domain: euArea,
+          }),
+         })
+          .then(() => {
+            toast.success('AI has responded', { id: eunotification });
+          })
+          .catch((err) => {
+            console.log('Error while calling API:', err);
+          });
+         
+           
+      }
+
+
       for (const { domain } of Domains) {
         if (selectedDomains.includes(domain)) {
-          const firstText = 'You are a data protection officer for Facebook. The company is launching a product which is similar to the Apple Watch. We are calling it TWatch. Can you create a data protection impact assessment (DPIA) to assess potential data protection risk associated with this product and suggest mitigation. Focus on assessing GDPR ';
-          const secondText = ' requirements. First explain key ';
-          const thirdText = ' requirements for this product then write top 10 data protection risks in numbered form and finally write 10 mitigations in bullet form. Make your answers to 2000 words and send your response in an HTML format so that I can copy that in an HTML code ';
-          const combinedText = firstText + domain + secondText + domain + thirdText;
+          const domainPrompt = context + dpiaInstruction + domain + domainInstruction;
           const notification = toast.loading('AI is thinking about ...' + domain);
-
-          await fetch('/api/createDpia', {
+          console.log(domainPrompt);
+           await fetch('/api/createDpia', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              prompt: combinedText,
+              prompt: domainPrompt,
               productId: selectedProduct?.id,
               model,
               session,
               domain,
             }),
-          })
+           })
             .then(() => {
               toast.success('AI has responded', { id: notification });
             })
             .catch((err) => {
               console.log('Error while calling API:', err);
             });
+
+           
 
           setSelectedOptions([]); // Reset selected options
         }
@@ -253,28 +393,28 @@ function DpiaPage() {
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox1}
-              onChange={(e) => setCheckbox1(e.target.checked)}
+              checked={regEnfcheckbox}
+              onChange={(e) => setregEnfcheckbox(e.target.checked)}
             />
-            <label>Include Regulatory Enfocements</label>
+            <label>Relavant Regulatory Enforcement</label>
           </div>
 
           <div className="flex items-center space-x-2">
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox2}
-              onChange={(e) => setCheckbox2(e.target.checked)}
+              checked={mediaCheckbox}
+              onChange={(e) => setmediaCheckbox(e.target.checked)}
             />
-            <label>Product Product Brief</label>
+            <label>Include Relavant Media Coverage</label>
           </div>
 
           <div className="flex items-center space-x-2">
             <input
               className="form-checkbox"
               type="checkbox"
-              checked={checkbox3}
-              onChange={(e) => setCheckbox3(e.target.checked)}
+              checked={euCheckbox}
+              onChange={(e) => seteuCheckbox(e.target.checked)}
             />
             <label>Include Relavant EU Judgements</label>
           </div>

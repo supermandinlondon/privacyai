@@ -5,12 +5,12 @@ import NewProduct from 'all/components/NewProduct';
 
 
 
+
 export default async function  page() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions);
   return (
     <div className=' bg-white'>
         <SessionProvider session={session}>
-        
             <NewProduct/>
         </SessionProvider>       
     </div>

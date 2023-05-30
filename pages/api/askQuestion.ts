@@ -16,7 +16,7 @@ export default async function handler(
     const {prompt, chatId, model, session} = req.body;
    
     console.log("prompt :: "+ prompt);
-    console.log("chatId :: "+chatId);
+    console.log("chatId :: "+ chatId);
     console.log("model  :: "+ model);
     if(!prompt){
         res.status(400).json({answer: "Please provide a prompt!"});
