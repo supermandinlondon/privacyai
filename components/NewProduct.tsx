@@ -141,24 +141,25 @@ function NewProduct() {
   <TransitionEffect />
   <div className="flex items-center justify-between mb-4">
     <h2 className="text-2xl font-bold">Products</h2>
-    <motion.button
-      onClick={createNewProduct}
-      className="bg-primary hover:bg-fuchsia-950 text-white font-bold py-2 px-4 rounded cursor-pointer"
-      whileHover={{
-        backgroundColor: [
-          '#121212',
-          'rgba(131,58,180,1)',
-          'rgba(253,29,29,1)',
-          'rgba(252,176,69,1)',
-          'rgba(131,58,180,1)',
-          '#121212',
-        ],
-        transition: { duration: 1, repeat: Infinity },
-      }}
-    >
-      <PlusIcon className="h-5 w-5 mr-2" />
-      Add New Product
-    </motion.button>
+    
+
+    <p></p>
+          <motion.div
+            onClick={createNewProduct}
+            className="bg-primary hover:bg-fuchsia-950 text-white font-bold py-2 px-4 rounded cursor-pointer"
+            whileHover={{
+              backgroundColor: ['#121212', 'rgba(131,58,180,1)', 'rgba(253,29,29,1)', 'rgba(252,176,69,1)', 'rgba(131,58,180,1)', '#121212'],
+              transition: { duration: 1, repeat: Infinity },
+            }}
+          >
+            Add New Product
+          </motion.div>
+        
+
+
+
+
+
   </div>
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
     {loading && (
