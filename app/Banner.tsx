@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { TypeAnimation } from 'react-type-animation';
-import homePic from "../public/image34.png"
+import homePic from "../public/image35.png"
 import TransitionEffect from './TransitionEffect';
 import AnimatedText from 'all/components/AnimatedText';
 import Head from 'next/head';
