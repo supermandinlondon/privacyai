@@ -103,7 +103,7 @@ function Dpia2({ dpiaId }: Props) {
       ) : (
         <>
           <div className="p-6">
-            <h1 className="text-3xl font-bold mb-4">Selected Product</h1>
+          
             {selectedProduct ? (
               <div>
                 <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>

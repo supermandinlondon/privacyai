@@ -264,7 +264,7 @@ function DpiaPage() {
     <div className="flex bg-white flex-col min-h-screen overflow-hidden px-4 sm:px-8">
       <TransitionEffect />
       <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4"> Selected Product </h1>
+  
 
       
       {selectedProduct ? (
