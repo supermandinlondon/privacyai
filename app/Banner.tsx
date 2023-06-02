@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { TypeAnimation } from 'react-type-animation';
-import homePic from "../public/image34.png"
+import homePic from "../public/image35.png"
 import TransitionEffect from './TransitionEffect';
 import AnimatedText from 'all/components/AnimatedText';
 import Head from 'next/head';
@@ -21,8 +21,9 @@ const Banner = () => {
       </Head>
       <TransitionEffect />
 
-      <main className="flex items-center justify-center text-dark w-full min-h-screen dark:text-light sm:items-start">
-        <div className="pt-0 md:pt-4 sm:pt-4 w-full h-full inline-block z-0 bg-light p-32 dark:bg-dark xl:p-24 lg:p-12 md:p-12 sm:p-8">
+      <main className="flex items-center  text-dark w-full min-h-screen sm:items-start">
+        <div className='w-full h-full inline-block z-0 bg-light pt-0 '>
+          <div className="pt-0 w-full h-full inline-block z-0 bg-light  xl:p-6 lg:p-6 md:p-6 sm:p-4">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between w-full">
             <div className="w-full lg:w-1/2">
               <Image
@@ -33,10 +34,11 @@ const Banner = () => {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
               />
             </div>
-            <div className="w-full my-10 lg:w-1/2 flex flex-col items-start lg:items-end lg:text-right">
+            <div className="w-1/2  lg:w-1/2 flex flex-col  items-center self-center  lg:items-end lg:text-right mx-0">
               <AnimatedText
                 text="AI assisted privacy assessments and risk mitigation"
-                className="text-7xl text-left xl:text-7xl lg:text-8xl md:text-5xl sm:text-3xl font-semibold"
+                className="text-left 
+                xl:text-7xl lg:text-8xl md:text-5xl sm:text-5xl font-semibold"
               />
               <p className="my-10  text-left font-large text-lg md:text-md sm:text-sm">
                 Transforming Privacy Risk Assessment with AI: Seamlessly analyze regulatory requirements and customer expectations to ensure product quality and speed.
