@@ -9,6 +9,7 @@ import NewChat from "./NewChat";
 import NewRiskChat from "./NewRiskChat";
 import NewAdviceChat from "./NewAdviceChat";
 import NewProductSolutionChat from "./NewProductSolutionChat";
+import NewPrivacyRequirementChat from "./NewPrivacyRequirementChat";
 import ModelSelection from "./ModelSelection";
 
 function SideBar() {
@@ -37,6 +38,11 @@ function SideBar() {
   (typeof window !== "undefined" &&
     window.location.pathname.startsWith("/protected/client/productsolutionchat/"));
 
+  const isPrivacyRequirementRoute =
+    (typeof window !== "undefined" && window.location.pathname === "/privacyrequirement") ||
+    (typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/protected/client/privacyrequirementchat/"));
+
   
 
   return (
@@ -44,7 +50,7 @@ function SideBar() {
       <div className="flex-1">
         <div>
           {/* Conditionally render NewRiskChat, NewAdviceChat, or NewChat */}
-        {isRiskAssessmentRoute ? <NewRiskChat /> : isAdviceRoute ? <NewAdviceChat /> : isProductSolutionRoute ? <NewProductSolutionChat /> : <NewChat />}
+        {isRiskAssessmentRoute ? <NewRiskChat /> : isAdviceRoute ? <NewAdviceChat /> : isProductSolutionRoute ? <NewProductSolutionChat /> :  isPrivacyRequirementRoute ? <NewPrivacyRequirementChat /> : <NewChat />}
 
           <div className="hidden sm:inline">
             <ModelSelection />
@@ -67,10 +73,15 @@ function SideBar() {
                 // If on an advice route, only show advice chats
                 if (isAdviceRoute) {
                   return chat.data().isAdvice === true;
-              }
-                // If on an product solution route, only show product solution chats
-                if (isProductSolutionRoute) {
-                return chat.data().isAProductSolution === true;
+                }
+                  // If on an product solution route, only show product solution chats
+                  if (isProductSolutionRoute) {
+                  return chat.data().isProductSolution === true;
+                }      
+                  // If on an product solution route, only show product solution chats
+                if (isPrivacyRequirementRoute) {
+                  return chat.data().isPrivacyRequirement === true;
+                
               }
                 // If on a non-risk assessment route, show all chats
                 return true;

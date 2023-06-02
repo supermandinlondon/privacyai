@@ -13,7 +13,7 @@ import Link from "next/link";
             <Link
                 href ="/advice"
                 className="text-5xl font-bold mb-20">
-                Privacy Advice
+                Privacy Analysis
             </Link>
         <div className='flex space-x-2 text-center'>
             <div>

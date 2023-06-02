@@ -16,7 +16,7 @@ type Props= {
 
 
     
-function RiskAssessmentInput({chatId}: Props) {
+function PrivacyRequirementInput({chatId}: Props) {
     const [prompt, setPrompt] = useState("");
     const {data: session} = useSession();
 
@@ -31,6 +31,7 @@ function RiskAssessmentInput({chatId}: Props) {
           sendMessage();
         }
       };
+    
 
     // Send query to the Flask server
     const queryEmbeddings = async (data: { prompt: string, index_name: string }) => {
@@ -53,29 +54,26 @@ function RiskAssessmentInput({chatId}: Props) {
         // Specify the database index to query
         const requestData = {
           prompt: input,
-          index_name: "risklog"
+          index_name: "privacyrequirements"
       };
       
         // Call the queryEmbeddings function to get the results from the Flask server
-        const riskObservationsText = await queryEmbeddings(requestData);
+        const privacyRequirementText = await queryEmbeddings(requestData);
+        console.log('Records:', requestData);
 
         // Merge the response and develop the query to the OpenAI API
-        const baseText = 'You are a Data Protection Officer with expertise in GDPR. Analyze the provided risk observation records to answer the following question: ';
+        const baseText = 'You are a Data Protection Officer with expertise in privacy law and also understands HTML coding. Analyze this question regarding privacy requirements for a product: ';
 
-        const riskQuestion = '. These are the risk observations that matched the question, which are numbered: ';
+        const privacyRequirementQuestion = '. When responding, please format your response using HTML tags for better readability, such as <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists. These are the existing privacy requirements related to the question: ';
       
-        // Rules for analyzing risk log
-        const riskRules =
-        ' When analyzing the risk observations, please follow these guidelines: ' +
-        '1) You can choose which of the risk observations are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
-        '2) Provide a summary of your analysis, but also list specific, risks that are separated by a new line. ' +
-        '3) Include the revelent risk observation number at the beginning of each new line in your response, if necessary. ' +
-        '4) Keep your response under 200 words.'
+        // Rules for analyzing privacy requirements
+        const privacyRequirementRules =
+        ' When analyzing these privacy requirements and question, please follow these guidelines: ' +
+        '1) If the question is asking about if there existing privacy requirements that could help address a privacy risk, provide only the existing privacy requirements that are relevant. ' +
+        '2) If the exising privacy requirements do not satisfy the risks raised by the question, provide suggested new privacy requirements that do. '
         ;
 
-        const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
-
-        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules + formatting;
+        const combinedText = baseText + prompt + privacyRequirementQuestion + privacyRequirementText.join(' ') + privacyRequirementRules;
 
         console.log('Full question:', combinedText);
 
@@ -95,9 +93,11 @@ function RiskAssessmentInput({chatId}: Props) {
         await addDoc(collection(db,'users',session?.user?.email!,'chats', chatId, 'messages'), 
         message 
         );
+
+        
         
         // Toast notification to say Loading
-        const notification = toast.loading('ChatGPT is thinking...');
+        const notification = toast.loading('PrivacyAI is thinking...');
 
         await fetch("/api/askQuestion", {
             method: "POST",
@@ -112,25 +112,28 @@ function RiskAssessmentInput({chatId}: Props) {
               messages: [{ role: "user", content: combinedText }],
               saveToDatabase: true,
             }),
-        }).then(() => {
+            
+        })
+            .then(response => response.json())
+            .then(data => {
+            
             //Toast notification to say successful
             console.log('prompt: hello world', prompt);
             console.log('session:', session);
-            toast.success('ChatGPT has responded',{id:notification});
+            toast.success('PrivacyAI has responded',{id:notification});
             console.log('after prompt*************');
         });
     };
 
-    
     return (
         <div className="h-48" >
           <form onSubmit={(e) => e.preventDefault()}
-            className="fixed-buttom-0 z-5 w-full flex justify-center px-20 py-20 space-y-2 space-x-2 ">
-            <div className="relative h-screen w-full max-w-2xl flex-grow"> {/* Set a maximum width here */}
+            className="fixed-buttom-0 z-5 w-full flex justify-center px-10 py-20 space-y-2 space-x-2 ">
+            <div className="relative w-full max-w-2xl flex-grow"> {/* Set a maximum width here */}
               <textarea 
                 className="flex items-center py-2 md:border-2 bg-white rounded-lg
                 shadow-md md:px-10 w-full border-gray-100 focus:outline-gray-100 focus:ring-0
-                focus:border-transparent px-5 pl-8 pr-20 pb-8 pt-2 disabled:opacity-50
+                focus:border-transparent px-5 pl-10 pr-10 pb-8 pt-2 disabled:opacity-50
                 disabled:cursor-not-allowed resize-none"
                 disabled={!session}
                 value={prompt}
@@ -155,5 +158,5 @@ function RiskAssessmentInput({chatId}: Props) {
       
     }
 
-export default RiskAssessmentInput;
+export default PrivacyRequirementInput;
 

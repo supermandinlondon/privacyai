@@ -5,7 +5,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 
- function RiskAssessment() {
+ function PrivacyRequirement() {
 
   return (
     <div>
@@ -13,14 +13,14 @@ import Link from "next/link";
             <Link
                 href ="/riskassessment"
                 className="text-5xl font-bold mb-20">
-                Risk Analysis
+                Privacy Requirement
             </Link>
         <div className='flex space-x-2 text-center'>
             <div>
                 <div className="flex flex-col items-center justify-center mb-5">
                     {/*Sun Icon */}
                     <SunIcon className="h-8 w-8" />
-                    <h2>Analyze risk assessment and observation log</h2>
+                    <h2>Analyze and develop privacy requirements</h2>
                 </div>
             </div>
 
@@ -30,5 +30,5 @@ import Link from "next/link";
   )
 }
 
-export default RiskAssessment;
+export default PrivacyRequirement;
 

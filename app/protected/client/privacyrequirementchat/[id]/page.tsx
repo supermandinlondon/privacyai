@@ -1,5 +1,5 @@
 import Chat from "all/components/Chat";
-import RiskAssessmentInput from "all/components/RiskAssessmentInput";
+import PrivacyRequirementInput from "all/components/PrivacyRequirementInput";
 
 type Props= {
     params: {
@@ -7,17 +7,18 @@ type Props= {
     }
 }
 
-function RiskAssessmentPage({params: {id}}: Props) {
+function PrivacyRequirementPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <div className="overflow-y-auto h-full">
             <Chat chatId ={id}/>
         </div>
         <div className="fixed bottom-20 w-full">
-            <RiskAssessmentInput chatId ={id}/>
+            <PrivacyRequirementInput chatId ={id}/>
         </div>
     </div>
   );
 }
 
-export default RiskAssessmentPage;
+
+export default PrivacyRequirementPage;

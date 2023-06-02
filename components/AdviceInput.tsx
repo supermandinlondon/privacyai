@@ -67,7 +67,7 @@ type Props= {
         ' When analyzing the privacy law and preparing your respones to the Privacy Counsel Decider, please follow these guidelines: ' +
         '1) Consider all related laws you are aware of. In addition, you can choose which of the privacy law references provided are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
         '2) Provide a summary of your analysis, but also list specific privacy law refenences as needed. ' +
-        '3) Keep your response under 200 words.'
+        '3) Format your concise response in bullet points and keep your response under 200 words.'
         ;
 
         const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
@@ -95,14 +95,14 @@ type Props= {
         let updatedText = combinedText;
 
         // Array of additional texts
-        const getAdditionalText = (iteration: number, twoResponsesAgo: string) => {
+        const getAdditionalText = (iteration: number, twoResponsesAgo: string, threeResponsesAgo: string) => {
           switch(iteration) {
             case 0:
-              return " You are a Privacy Counsel Decider with and you will have to make a final decision on the privacy analysis. A Privacy Counsel Researcher has conducted in depth privacy law research. This is the question you are tasked with providiing analysis on: \n\n" + prompt + "\n\nThis is what the Privacy Counsel Research has analyzed. Is there anything else the Privacy Counsel Researcher should consider: \n\n"; 
+              return " You are a Privacy Counsel Decider with and you will have to make a final decision on the privacy analysis. A Privacy Counsel Researcher has conducted in depth privacy law research. This is the question you are tasked with providiing analysis on: \n\n" + prompt + "\n\nThis is what the Privacy Counsel Research has analyzed. Provide concise bullet points of anything that has been missed and should be considered: \n\n"; 
             case 1:
-              return " You are a Privacy Counsel Researcher with expertise in privacy law. You sent this analysis to the Privacy Counsel Decide: \n\n" + twoResponsesAgo + "\n\nUpdate your original analysis to incoporate this is the response from the Privacy Counsel Decider into your analysis: \n\n"; 
+              return " You are a Privacy Counsel Researcher with expertise in privacy law. You sent this analysis to the Privacy Counsel Decide: \n\n" + twoResponsesAgo + "\n\nUpdate your original analysis to incoporate this is the response from the Privacy Counsel Decider into your analysis, ensuring to keep it as concise bullet points: \n\n"; 
             case 2:
-              return " You are a Privacy Counsel Decider with and you will have to make a final decision on the privacy analysis. This is the question you have been tasked with answering: \n\n" + prompt + "\n\nWhat is your final basis on this, based the analysis from the Privacy Counsel Researcher: \n\n" ;
+              return " You are a Privacy Counsel Decider with and you will have to make a final decision on the privacy analysis. This is the question you have been tasked with answering: \n\n" + prompt + "\n\nProvide final analysis in bullet form, based the analysis from the Privacy Counsel Researcher: \n\n" + threeResponsesAgo + " \n\n";
             default:
               return "" ;
           }
@@ -111,6 +111,7 @@ type Props= {
 
         let previousResponse = '';
         let twoResponsesAgo = ""; 
+        let threeResponsesAgo = "";
         
 
         // Loop a desired number of times
@@ -142,9 +143,14 @@ type Props= {
             // Save the current response for the next loop iteration
             twoResponsesAgo = previousResponse;
             previousResponse = responseText;
+            if (i === 0) {
+              threeResponsesAgo = responseText;
+          }
+
+            console.log(`Iteration ${i + 1} Response:`, responseText);
 
             // Append the additional text to the responseText
-            updatedText = modifyResponse(responseText, getAdditionalText(i, twoResponsesAgo));
+            updatedText = modifyResponse(responseText, getAdditionalText(i, twoResponsesAgo, threeResponsesAgo));
                 
 
             //Toast notification to say successful

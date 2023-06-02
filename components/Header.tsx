@@ -16,14 +16,21 @@ const Header = () => {
           </span>
           </Link>
           <Link href="/products" className="mr-4 relative group">
-            Products
+            Product Analysis
             <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
                   group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
               &nbsp;
           </span>
           </Link>
-          <Link href="/protected/client" className="mr-4 relative group">
-            Chat
+          <Link href="/riskassessment" className="mr-4 relative group">
+            Risk Assessment
+            <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
+                  group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
+              &nbsp;
+          </span>
+          </Link>
+          <Link href="/privacyrequirement" className="mr-4 relative group">
+            Privacy Requirements
             <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
                   group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
               &nbsp;

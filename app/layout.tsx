@@ -31,7 +31,7 @@ export default async function RootLayout({
             <ClientProvider/>          
             <div >{children}</div>
             </ProductProvider>
-          <Footer/>
+
         </SessionProvider>
       </body>
     </html>

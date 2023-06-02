@@ -37,11 +37,13 @@ type Props= {
             return [];
         }
     };  
-      const modifyResponse = (response: string, additionalText: string) => {
-        const modifiedResponse = additionalText + response;
-        console.log('Modified response:', modifiedResponse);
-        return modifiedResponse;
-    }
+    const modifyResponse = (response: string, additionalText: string, shouldAppend: boolean) => {
+      if (shouldAppend) {
+        return additionalText + response;
+      } else {
+        return additionalText;
+      }
+     }
   
         const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -67,15 +69,12 @@ type Props= {
         ' When analyzing the privacy law and preparing your respone to the Product Mangager and Product Decider, please follow these guidelines: ' +
         '1) Consider all related laws you are aware of. In addition, you can choose which of the privacy law references provided are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
         '2) Provide a summary of your analysis, but also list specific privacy law refenences as needed. ' +
-        '3) Keep your response under 200 words.'
+        '3) Provide your concise analysis in bullet form in under 200 words, do not include an introduction or conclusion. '
         ;
 
         const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
 
         const combinedText = baseText + prompt + adviceQuestion + privacyLaws.join(' ') + adviceRules + formatting;
-
-        console.log('Full question:', combinedText);
-
         
         // Create the base message outside the loop
         const baseMessage: Message = {
@@ -95,14 +94,21 @@ type Props= {
         let updatedText = combinedText;
 
         // Array of additional texts
-        const getAdditionalText = (iteration: number, twoResponsesAgo: string) => {
+        const getAdditionalText = (iteration: number, previousResponse: string, twoResponsesAgo: string) => {
           switch(iteration) {
             case 0:
-              return " You are a Product Manager working with a Privacy Counsel and Product Decider to identify a product solution. A Privacy Counsel has conducted in depth privacy law research based on a question. This is the question you are tasked with developing a solution for: \n\n" + prompt + "\n\nThis is what the Privacy Counsel Research has analyzed. What are your Product needs and what concerns do you have with the privacy analysis here: \n\n"; 
+              return {
+                additionalText: " You are a Product Manager working with a Privacy Counsel and Product Decider to identify a product solution. This is the question you are tasked with developing a solution for: \n\n" + prompt + " Articulate the business goals for your product and how this new change can provide business and product benefits. Provide your concise analysis in bullet form in under 200 words and do not include an introduction or conclusion.\n\n",
+                shouldAppend: false}; 
             case 1:
-              return " You are a Product Decider working with a Privacy Counsel and Product Manager to find a product solution. Your job is to use the Privacy Counsel and Product Manager input to find the best possible solution that balances product and privacy needs. This is the analysis from the Privacy Counsel\n\n" + twoResponsesAgo + "\n\nAnd this is the anaylsis from the Product Manager, what recommendation can you make to find a mutally beneficial solution\n\n"; 
+              return {
+                additionalText: " You are a Product Decider working with a Privacy Counsel and Product Manager to find a product solution. Your job is to use the Privacy Counsel and Product Manager input to find the best possible solution that balances product and privacy needs. This is the analysis from the Privacy Counsel\n\n" + twoResponsesAgo + "\n\nAnd this is the anaylsis from the Product Manager, summarize the privacy risks and product benefits and then develop a recommendation to find a mutally beneficial solution. Include HTML tags for headers and bullet points to improve readability. Do not include an introduction or conculsion.\n\n",
+                shouldAppend: true}; 
             default:
-              return "" ;
+              return { 
+                additionalText: "",
+                shouldAppend: false 
+              };
           }
         }
       
@@ -116,7 +122,7 @@ type Props= {
             
           // Toast notification to say Loading
             const notification = toast.loading('ChatGPT is thinking...');
-
+            console.log(`Iteration ${i + 1} Prompt:`, updatedText);
             // Fetch response from the OpenAI API
             let apiResponse = await fetch("/api/askQuestion", {
                 method: "POST",
@@ -137,17 +143,19 @@ type Props= {
             let responseJson = await apiResponse.json();
             let responseText = responseJson.answer;
 
+            console.log(`Iteration ${i + 1} Response:`, responseText);
+
             // Save the current response for the next loop iteration
             twoResponsesAgo = previousResponse;
             previousResponse = responseText;
 
             // Append the additional text to the responseText
-            updatedText = modifyResponse(responseText, getAdditionalText(i, twoResponsesAgo));
+            const { additionalText, shouldAppend } = getAdditionalText(i, previousResponse, twoResponsesAgo);
+            updatedText = modifyResponse(responseText, additionalText, shouldAppend);
+
                 
 
             //Toast notification to say successful
-            console.log('prompt: hello world', prompt);
-            console.log('session:', session);
             toast.success('ChatGPT has responded',{id:notification});
             console.log('after prompt*************');
         }

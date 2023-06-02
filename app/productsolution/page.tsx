@@ -13,45 +13,16 @@ import Link from "next/link";
             <Link
                 href ="/productsolution"
                 className="text-5xl font-bold mb-20">
-                Risk Assessment Log
+                Solution Design
             </Link>
         <div className='flex space-x-2 text-center'>
             <div>
                 <div className="flex flex-col items-center justify-center mb-5">
-                    {/*Sun Icon */}
-                    <SunIcon className="h-8 w-8" />
-                    <h2>Examples</h2>
-                </div>
-                <div className="space-y-2">
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
-                </div>
-            </div>
-            <div>
-                <div className="flex flex-col items-center justify-center mb-5">
                     {/*Bolt Icon */}
                     <BoltIcon className="h-8 w-8" />
-                    <h2>Capabilies</h2>
-                </div>
-                <div className="space-y-2">
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
+                    <h2>Develop cross-functional product privacy solutions</h2>
                 </div>
             </div>
-            <div>
-                <div className="flex flex-col items-center justify-center mb-5">
-                    {/*ExclamationTriangle Icon */}
-                    <ExclamationTriangleIcon className="h-8 w-8" />
-                    <h2>Limitations</h2>
-                </div>
-                <div className="space-y-2">
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
-                    <p className="infoText">"Explain"</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

@@ -71,6 +71,11 @@ def search_index(prompt, index_name, top_k=5):
             f"{i + 1}. {match['metadata']['observation']} [{match['metadata']['principle']}]. This has a {match['metadata']['ds_harm']} Data Subject Harm and {match['metadata']['c_harm']} Controller Harm."
             for i, match in enumerate(res['results'][0]['matches'])
         ]
+    if index_name == 'privacyrequirements':
+        formatted_results = [
+            f"{i + 1}. {match['id']} | Product: {match['metadata']['product']} | Privacy Requirement: {match['metadata']['privacy_requirement']}"
+            for i, match in enumerate(res['results'][0]['matches'])
+        ]
     elif index_name == 'privacylaws':
         formatted_results = [
             f"{i + 1}. Law: {match['id']} - Summary: {match['metadata']['summary']}."

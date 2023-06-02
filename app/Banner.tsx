@@ -7,6 +7,7 @@ import homePic from "../public/image34.png"
 import TransitionEffect from './TransitionEffect';
 import AnimatedText from 'all/components/AnimatedText';
 import Head from 'next/head';
+import Footer from './Footer';
 
 
 const Banner = () => {
@@ -63,11 +64,14 @@ const Banner = () => {
                 >
                   Ask AI
                 </Link>
+                
               </div>
             </div>
           </div>
         </div>
+        
       </main>
+      <Footer/>
     </div>
   );
 };

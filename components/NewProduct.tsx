@@ -22,7 +22,7 @@ function NewProduct() {
   const { data: session } = useSession();
 
   const [products, loading, error] = useCollection(
-    session && query(collection(db, 'users', session.user?.email!, 'products'), orderBy('createdAt', 'asc'))
+    session && query(collection(db, 'users', 'emailwadhwani@gmail.com', 'products'), orderBy('createdAt', 'asc'))
   );
 
   const { setSelectedProduct } = useProductContext();
@@ -77,7 +77,7 @@ function NewProduct() {
 
   const viewDpia = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
+      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 

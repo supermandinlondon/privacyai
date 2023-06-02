@@ -34,7 +34,7 @@ function Chat({ chatId }: Props) {
 
   return (
   
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
+    <div className="flex flex-col h-[85vh] overflow-y-auto">
       {messages?.empty && (
         <>
           <p style={{ textAlign: "center" }}   className="mt-10 text-cnter text-white">
