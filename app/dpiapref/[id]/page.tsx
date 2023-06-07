@@ -9,6 +9,7 @@ import TransitionEffect from 'all/app/TransitionEffect';
 import { useProductContext } from 'all/app/ProductContext';
 import { motion } from 'framer-motion';
 import projectConfig from 'all/lib/projectConfig';
+import Footer from 'all/app/Footer';
 
 
 function DpiaPage() {
@@ -261,15 +262,13 @@ function DpiaPage() {
   ];
 
   return (
-    <div className="flex bg-white flex-col min-h-screen overflow-hidden px-4 sm:px-8">
+    <div className="bg-white h-screen flex flex-col">
+      <div className="flex-grow bg-white overflow-y-auto">
       <TransitionEffect />
       <div className="p-6">
-  
-
-      
       {selectedProduct ? (
         <div className="p-6">
-          <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+          <h1 className="text-3xl flex font-bold mb-4">{selectedProduct.name}</h1>
           <p>{selectedProduct.desc}</p>
           <div className="flex justify-center">
                   <img src={selectedProduct.image} alt="" className="h-26 w-26 align-middle" />
@@ -428,7 +427,10 @@ function DpiaPage() {
         >
           Submit
         </button>
+        
       </form>
+      <Footer className="flex-none"/> 
+     </div> 
     </div>
   );
 }

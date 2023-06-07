@@ -13,10 +13,9 @@ function RiskAssessmentPage({params: {id}}: Props) {
         <div className="overflow-y-auto h-full">
             <Chat chatId ={id}/>
         </div>
-        <div className="fixed bottom-20 w-full">
-            <RiskAssessmentInput chatId ={id}/>
+        <RiskAssessmentInput chatId ={id}/>
         </div>
-    </div>
+    
   );
 }
 

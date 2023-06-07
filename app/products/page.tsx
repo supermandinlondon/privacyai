@@ -9,12 +9,16 @@ import Footer from 'all/app/Footer';
 export default async function  page() {
   const session = await getServerSession(authOptions);
   return (
-    <div className=' bg-white'>
+    <div className=' bg-white h-screen flex flex-col'>
         <SessionProvider session={session}>
-            <NewProduct/>
+            <div className="overflow-y-auto flex-grow">
+                <NewProduct/>
+                <Footer className="flex-none"/>   
+            </div>
         </SessionProvider>   
-        <Footer/>     
+          
     </div>
   )
 }
+
 

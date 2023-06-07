@@ -12,7 +12,7 @@ import Footer from './Footer';
 
 const Banner = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen overflow-y-auto">
       <Head>
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
@@ -21,7 +21,7 @@ const Banner = () => {
       </Head>
       <TransitionEffect />
 
-      <main className="flex items-center  text-dark w-full min-h-screen sm:items-start">
+      <main className="flex items-center text-dark w-full  sm:items-start">
         <div className='w-full h-full inline-block z-0 bg-light pt-0 '>
           <div className="pt-0 w-full h-full inline-block z-0 bg-light  xl:p-6 lg:p-6 md:p-6 sm:p-4">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between w-full">
@@ -70,10 +70,12 @@ const Banner = () => {
               </div>
             </div>
           </div>
+          
         </div>
         
+        </div>
       </main>
-      <Footer/>
+      <Footer className="flex-none"/>  
     </div>
   );
 };

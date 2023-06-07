@@ -83,7 +83,7 @@ function ChatInput({chatId}: Props) {
             space-y-2
 
             space-x-2  border-t border-gray-100 ">
-            <input 
+        <input 
             className=" 
             flex items-center py-2   md:border-2 bg-transparent 
             rounded-lg

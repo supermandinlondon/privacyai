@@ -23,6 +23,13 @@ type Props= {
       const { data: model} = useSWR('model',{
           fallbackData:'gpt-3.5-turbo'
       })
+
+      const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      };
   
       // Send query to the Flask server
       const queryEmbeddings = async (data: { prompt: string, index_name: string }) => {
@@ -37,18 +44,17 @@ type Props= {
             return [];
         }
     };  
-    const modifyResponse = (response: string, additionalText: string, shouldAppend: boolean) => {
+    const modifyResponse = (response: string, additionalText: string, shouldAppend: boolean, customText: string) => {
       if (shouldAppend) {
-        return additionalText + response;
+        return additionalText + response + customText;
       } else {
         return additionalText;
       }
-     }
+    }
   
-        const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          if (!prompt) return;
-          const input = prompt.trim();
+     const sendMessage = async () => {
+      if (!prompt) return;
+      const input = prompt.trim();
           
           // Specify the database index to query
           const requestData = {
@@ -67,7 +73,7 @@ type Props= {
         // Rules for analyzing privacy laws
         const adviceRules =
         ' When analyzing the privacy law and preparing your respone to the Product Mangager and Product Decider, please follow these guidelines: ' +
-        '1) Consider all related laws you are aware of. In addition, you can choose which of the privacy law references provided are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
+        '1) Consider all related laws you are aware of not just the ones provided to you. In addition, you can choose which of the privacy law references provided are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
         '2) Provide a summary of your analysis, but also list specific privacy law refenences as needed. ' +
         '3) Provide your concise analysis in bullet form in under 200 words, do not include an introduction or conclusion. '
         ;
@@ -76,6 +82,8 @@ type Props= {
 
         const combinedText = baseText + prompt + adviceQuestion + privacyLaws.join(' ') + adviceRules + formatting;
         
+        setPrompt("");
+
         // Create the base message outside the loop
         const baseMessage: Message = {
             text: input,
@@ -99,15 +107,20 @@ type Props= {
             case 0:
               return {
                 additionalText: " You are a Product Manager working with a Privacy Counsel and Product Decider to identify a product solution. This is the question you are tasked with developing a solution for: \n\n" + prompt + " Articulate the business goals for your product and how this new change can provide business and product benefits. Provide your concise analysis in bullet form in under 200 words and do not include an introduction or conclusion.\n\n",
-                shouldAppend: false}; 
+                shouldAppend: false,
+                customText: ""
+              };
             case 1:
               return {
-                additionalText: " You are a Product Decider working with a Privacy Counsel and Product Manager to find a product solution. Your job is to use the Privacy Counsel and Product Manager input to find the best possible solution that balances product and privacy needs. This is the analysis from the Privacy Counsel\n\n" + twoResponsesAgo + "\n\nAnd this is the anaylsis from the Product Manager, summarize the privacy risks and product benefits and then develop a recommendation to find a mutally beneficial solution. Include HTML tags for headers and bullet points to improve readability. Do not include an introduction or conculsion.\n\n",
-                shouldAppend: true}; 
+                additionalText: " You are a Product Decider working with a Privacy Counsel and Product Manager to find a product solution. Your job is to use the Privacy Counsel and Product Manager input to find the best possible solution that balances product and privacy needs. This is the analysis from the Privacy Counsel:\n\n" + twoResponsesAgo + "\n\nAnd this is the analysis from the Product Manager:\n\n",
+                shouldAppend: true,
+                customText: "\n\nFollow these rules to develop you analysis:  1) Include HTML tags for headers and bullet points to improve readability such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists. 2) Outline the privacy risks and product benefits under seperate bolded headings for each seperated by line breaks. 3) Develop specific feature and mitigation recommendations to find a mutally beneficial solution and feature design under a bolded header seperated by line breaks. 4) Provide your anaysis about why this satsifies the privacy, product, and business needs without referencing the Privacy Counsel and Product Manager by name under a bolded header seperated by line breaks."
+              }; 
             default:
               return { 
                 additionalText: "",
-                shouldAppend: false 
+                shouldAppend: false,
+                customText: ""
               };
           }
         }
@@ -121,7 +134,7 @@ type Props= {
         for (let i = 0; i < 3; i++) {
             
           // Toast notification to say Loading
-            const notification = toast.loading('ChatGPT is thinking...');
+            const notification = toast.loading('PriacyAI is thinking...');
             console.log(`Iteration ${i + 1} Prompt:`, updatedText);
             // Fetch response from the OpenAI API
             let apiResponse = await fetch("/api/askQuestion", {
@@ -150,58 +163,54 @@ type Props= {
             previousResponse = responseText;
 
             // Append the additional text to the responseText
-            const { additionalText, shouldAppend } = getAdditionalText(i, previousResponse, twoResponsesAgo);
-            updatedText = modifyResponse(responseText, additionalText, shouldAppend);
+            const { additionalText, shouldAppend, customText } = getAdditionalText(i, previousResponse, twoResponsesAgo);
+            updatedText = modifyResponse(responseText, additionalText, shouldAppend, customText);
 
                 
 
             //Toast notification to say successful
-            toast.success('ChatGPT has responded',{id:notification});
+            toast.success('PrivacyAI has responded',{id:notification});
             console.log('after prompt*************');
         }
+        
 
 };
 
     
   return (
-    <div className="h-48" >
-        <form onSubmit={sendMessage} 
-            className="fixed-buttom-0   z-5 w-full flex px-20 py-20 
-            
-            space-y-2
-
-            space-x-2  border-t border-gray-100 ">
-            <input 
-            className=" 
-            flex items-center py-2   md:border-2 bg-transparent 
-            rounded-lg
-            shadow-md md:px-10
-            
-            flex-1  border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-600
-            focus:border-transparent px-5  disabled:opacity-50 disabled:cursor-not-allowed
-            
-            "
-            disabled={!session}
-            value ={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            type = "text" 
-            placeholder = "Type your message here..."/>
-
-            <button 
-                disabled={!prompt || !session} 
-                type="submit"
-                className="bg-[#11A37F] hover:opacity-50 text-white font-bold
-                px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed">
-                <PaperAirplaneIcon className="h-5 w-5 -rotate-45"/>
+    <div className="h-48">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full flex justify-center pb-10"
+        >
+          <div className="relative w-[800px] mx-auto">
+            <textarea
+              className="w-full py-2 bg-white border-gray rounded-lg 
+                    shadow-md md:px-10 border-gray-100 focus:outline-gray-100 focus:ring-0
+                    focus:border-transparent pt-2 disabled:opacity-50
+                    disabled:cursor-not-allowed resize-none"
+              disabled={!session}
+              value={prompt}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Type your message here..."
+            />
+            <button
+              disabled={!prompt || !session}
+              onClick={sendMessage}
+              type="button"
+              className="absolute right-4 bottom-4 bg-[#11A37F] hover:opacity-50 text-white font-bold
+                    px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
             </button>
-
-
+          </div>
         </form>
         <div className="md:hidden">
-            <ModelSelection/>
+          <ModelSelection />
         </div>
-    </div>  
-  );
+      </div>
+    );
 }
 
 export default ProductSolutionInput;

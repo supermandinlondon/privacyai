@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { PlusIcon, EyeIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Footer from 'all/app/Footer';
 
 async function Productpage() {
   
@@ -31,14 +32,16 @@ async function Productpage() {
   };
 
   return (
+    <div className="bg-white h-screen flex flex-col">
+    <div className= "flex-grow bg-white overflow-y-auto">
     <div className="p-6 bg-white">
     
     {selectedProduct ? (
       <div>
-        <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+        <h1 className="text-3xl  font-bold mb-4">{selectedProduct.name}</h1>
         <div className="flex">
             <motion.div
-              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
+              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2 overflow-y-auto"
               whileHover={{
                 backgroundColor: [
                   '#121212',
@@ -93,6 +96,9 @@ async function Productpage() {
         <p>No product selected.</p>
       </div>
     )}
+    </div>
+    <Footer className="flex-none"/>  
+  </div>
   </div>
   );
 }

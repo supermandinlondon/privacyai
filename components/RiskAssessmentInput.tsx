@@ -97,7 +97,7 @@ function RiskAssessmentInput({chatId}: Props) {
         );
         
         // Toast notification to say Loading
-        const notification = toast.loading('ChatGPT is thinking...');
+        const notification = toast.loading('PrivacyAI is thinking...');
 
         await fetch("/api/askQuestion", {
             method: "POST",
@@ -116,42 +116,48 @@ function RiskAssessmentInput({chatId}: Props) {
             //Toast notification to say successful
             console.log('prompt: hello world', prompt);
             console.log('session:', session);
-            toast.success('ChatGPT has responded',{id:notification});
+            toast.success('PrivacyAI has responded',{id:notification});
             console.log('after prompt*************');
         });
     };
 
     
     return (
-        <div className="h-48" >
-          <form onSubmit={(e) => e.preventDefault()}
-            className="fixed-buttom-0 z-5 w-full flex justify-center px-20 py-20 space-y-2 space-x-2 ">
-            <div className="relative h-screen w-full max-w-2xl flex-grow"> {/* Set a maximum width here */}
-              <textarea 
-                className="flex items-center py-2 md:border-2 bg-white rounded-lg
-                shadow-md md:px-10 w-full border-gray-100 focus:outline-gray-100 focus:ring-0
-                focus:border-transparent px-5 pl-8 pr-20 pb-8 pt-2 disabled:opacity-50
-                disabled:cursor-not-allowed resize-none"
-                disabled={!session}
-                value={prompt}
-                onKeyDown={handleKeyDown}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Type your message here..."/>
-              <button 
-                disabled={!prompt || !session}
-                onClick={sendMessage}
-                type="button"
-                className="absolute right-4 bottom-2 bg-[#11A37F] hover:opacity-50 text-white font-bold
-                px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed">
-                <PaperAirplaneIcon className="h-5 w-5 -rotate-45"/>
-              </button>
-            </div>
-          </form>
-          <div className="md:hidden">
-            <ModelSelection/>
+      <div className="h-48">
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="w-full flex justify-center pb-10"
+        >
+          <div className="relative w-[800px] mx-auto">
+            <textarea
+              className="w-full py-2 bg-white rounded-lg 
+                    shadow-md md:px-10 border-gray-100 focus:outline-gray-100 focus:ring-0
+                    focus:border-transparent pt-2 disabled:opacity-50
+                    disabled:cursor-not-allowed resize-none"
+              disabled={!session}
+              value={prompt}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Type your message here..."
+            />
+            <button
+              disabled={!prompt || !session}
+              onClick={sendMessage}
+              type="button"
+              className="absolute right-4 bottom-4 bg-[#11A37F] hover:opacity-50 text-white font-bold
+                    px-4 py-2 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
+            </button>
           </div>
-        </div>  
-      );
+        </form>
+        <div className="md:hidden">
+          <ModelSelection />
+        </div>
+      </div>
+    );
+    
+    
       
     }
 

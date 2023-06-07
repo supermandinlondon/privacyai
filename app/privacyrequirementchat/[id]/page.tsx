@@ -10,10 +10,12 @@ type Props= {
 function PrivacyRequirementPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-        <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+        <div className="flex-grow overflow-y-auto">
             <Chat chatId ={id}/>
         </div>
-        <PrivacyRequirementInput chatId ={id}/>
+        <div className="flex-none">
+            <PrivacyRequirementInput chatId ={id}/>
+        </div>
     </div>
   );
 }

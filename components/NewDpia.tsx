@@ -14,8 +14,8 @@ function NewDpia() {
   try{
 
   const doc = await addDoc (
-    collection(db,"users", session?.user?.email!, "chats"),{
-      userID:session?.user?.email!,
+    collection(db,"users", 'emailwadhwani@gmail.com', "chats"),{
+      userID:'emailwadhwani@gmail.com',
       createdAt: serverTimestamp()
     }
     );

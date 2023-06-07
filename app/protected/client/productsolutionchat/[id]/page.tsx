@@ -10,7 +10,9 @@ type Props= {
 function ProductSolutionPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
+        <div className="overflow-y-auto h-full">
         <Chat chatId ={id}/>
+        </div>
         <ProductSolutionInput chatId ={id}/>
     </div>
   );

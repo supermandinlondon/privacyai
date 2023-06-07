@@ -28,7 +28,7 @@ function NewProduct() {
 
   const createNewProduct = async () => {
     try {
-      const docRef = await addDoc(collection(db, 'users', session?.user?.email!, 'products'), {
+      const docRef = await addDoc(collection(db, 'users', 'emailwadhwani@gmail.com', 'products'), {
         name: 'New Product444',
         desc: 'Product description', // Add a description field
         requirements: ['req 11', 'req 21', 'req 31'],
@@ -46,7 +46,7 @@ function NewProduct() {
 
   const createNewDpia = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
+      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 
@@ -104,7 +104,7 @@ function NewProduct() {
 
   const viewProduct = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
+      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 

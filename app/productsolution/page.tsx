@@ -11,7 +11,7 @@ import Link from "next/link";
     <div>
         <div className="flex flex-col items-center justify-center h-screen px-2 text-white" >
             <Link
-                href ="/productsolution"
+                href ="/riskassessment"
                 className="text-5xl font-bold mb-20">
                 Solution Design
             </Link>

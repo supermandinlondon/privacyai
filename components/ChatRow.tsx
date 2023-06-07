@@ -11,10 +11,11 @@ type Props = {
     id: string;
     filterRiskAssessment?: boolean;
     filterAdvice?: boolean;
+    filterPrivacyRequirement?: boolean;
 
 }
 
-function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false }: Props) {
+function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false, filterPrivacyRequirement = false }: Props) {
     const pathname = usePathname();
     const router = useRouter();
     const {data: session} = useSession();
@@ -25,14 +26,16 @@ function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false }: Pro
         queryParam = where('isRiskAssessment', '==', true);
     } else if (filterAdvice) {
         queryParam = where('isAdvice', '==', true);
+    } else if (filterPrivacyRequirement) {
+        queryParam = where('isPrivacyRequirement', '==', true);
     } else {
         queryParam = orderBy('createdAt', 'desc');
     }
 
     const [messages] = useCollection(
         query(
-          collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'),
-          queryParam
+            collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'),
+            queryParam
         )
     );
 
@@ -42,26 +45,37 @@ function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false }: Pro
 
     }, [pathname]);
 
-    const removeChat = async() => {
-        await deleteDoc(doc(db,'users',session?.user?.email!,'chats', id))
-        router.replace("/");
+    const removeChat = async(event: React.MouseEvent) => {
+        event.stopPropagation();
+        await deleteDoc(doc(db,'users',session?.user?.email!,'chats', id));
     }
 
+    const chatText = messages?.docs[messages?.docs.length - 1]?.data().text || 'New Chat';
+    const truncatedChatText = chatText.length > 25 ? chatText.substring(0, 25) + '...' : chatText;
+    let chatBasePath = "/protected/client/chat";
+    if (pathname) {
+        chatBasePath = pathname.includes("/privacyrequirement") ? "/protected/client/privacyrequirementchat" :
+                        pathname.includes("/riskassessment") ? "/protected/client/riskassessmentchat" :
+                        "/protected/client/chat";
+    }
 
-    
     return (
-    <Link 
-        href={`/protected/client/chat/${id}`} className={`chatRow justify-center ${active && "bg-gray-700/50"}`}>
-        <ChatBubbleLeftIcon className="h-5 w-5"/>
-        <p className="flex-1 hidden md:inline-flex truncate">
-            {messages?.docs[messages?.docs.length - 1]?.data().text || 'New Chat'}
-        </p>
-        <TrashIcon
-            onClick={removeChat}
-            className="h-5 w-5 text-gray-700 hover:text-red-700"/>
-    </Link>
-  )
+        <div className={`chatRow justify-center ${active && "bg-gray-700/50"} flex items-center`}>
+            <Link href={`${chatBasePath}/${id}`} className="flex-grow">
+                <div className="flex items-center">
+                    <ChatBubbleLeftIcon className="h-5 w-5 mr-2"/>
+                    <p className="flex-1 hidden md:inline-flex truncate">
+                        {truncatedChatText}
+                    </p>
+                </div>
+            </Link>
+            <TrashIcon
+                onClick={(event) => removeChat(event)}
+                className="h-5 w-5 text-gray-700 hover:text-red-700"/>
+        </div>
+    )
 }
+
 export default ChatRow;
 
 function asyn() {

@@ -51,7 +51,7 @@ function Dpia2({ dpiaId }: Props) {
           const collectionRef = collection(
             db,
             "users",
-            session?.user?.email!,
+            "emailwadhwani@gmail.com",
             "products",
             dpiaId,
             domain

@@ -36,6 +36,13 @@ const Header = () => {
               &nbsp;
           </span>
           </Link>
+          <Link href="/productsolution" className="mr-4 relative group">
+            Solution Design
+            <span className=" h-[1px] inline-block  bg-dark  absolute left-0 -bottom-0.5
+                  group-hover:w-full transition-[width] ease duration-300 dark:bg-light">
+              &nbsp;
+          </span>
+          </Link>
         </nav>
 			</div>
 

@@ -23,7 +23,7 @@ function Dpia({ dpiaId }: Props) {
         collection(
           db, 
           "users", 
-          session?.user?.email!, 
+          "emailwadhwani@gmail.com", 
           "chats", 
           dpiaId, 
           "messages"
@@ -35,7 +35,7 @@ function Dpia({ dpiaId }: Props) {
   
   return (
   
-    <div className="flex-1 overflow-y-auto overflow-x-hidden">
+    <div className="flex-1 overflow-y-:scroll overflow-x-hidden">
       {messages?.docs.map((message) => ( 
         <div className ="p-10 bg-yellow-200 border-2 m-2 shadow-lg">
           <p>{message?.data().text}</p>

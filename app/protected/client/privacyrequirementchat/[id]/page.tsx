@@ -11,12 +11,10 @@ function PrivacyRequirementPage({params: {id}}: Props) {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
         <div className="overflow-y-auto h-full">
-            <Chat chatId ={id}/>
+        <Chat chatId ={id}/>
         </div>
-        <div className="fixed bottom-20 w-full">
-            <PrivacyRequirementInput chatId ={id}/>
+        <PrivacyRequirementInput chatId ={id}/>
         </div>
-    </div>
   );
 }
 
