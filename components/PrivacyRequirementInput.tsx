@@ -66,13 +66,14 @@ function PrivacyRequirementInput({chatId}: Props) {
         // Merge the response and develop the query to the OpenAI API
         const baseText = 'You are a Data Protection Officer with expertise in privacy law and also understands HTML coding. Analyze this question regarding privacy requirements for a product: ';
 
-        const privacyRequirementQuestion = '. When responding, please format your response using HTML tags for better readability, such as <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists. These are the existing privacy requirements related to the question: ';
+        const privacyRequirementQuestion = '. To help with your analysis, these are the existing privacy requirements related to the question: ';
       
         // Rules for analyzing privacy requirements
         const privacyRequirementRules =
         ' When analyzing these privacy requirements and question, please follow these guidelines: ' +
         '1) If the question is asking about if there existing privacy requirements that could help address a privacy risk, provide only the existing privacy requirements that are relevant. ' +
-        '2) If the exising privacy requirements do not satisfy the risks raised by the question, provide suggested new privacy requirements that do. '
+        '2) If the exising privacy requirements do not satisfy the risks raised by the question, provide suggested new privacy requirements that do. ' +
+        '3) When responding, organize your response and please format your it using HTML tags for better readability, such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists.'
         ;
 
         const combinedText = baseText + prompt + privacyRequirementQuestion + privacyRequirementText.join(' ') + privacyRequirementRules;

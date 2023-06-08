@@ -32,7 +32,7 @@ function NewProduct() {
         name: 'New Product444',
         desc: 'Product description', // Add a description field
         requirements: ['req 11', 'req 21', 'req 31'],
-        userID: session?.user?.email!,
+        userID: 'emailwadhwani@gmail.com',
         createdAt: serverTimestamp(),
         image: 'https://example.com/image.jpg',
       });

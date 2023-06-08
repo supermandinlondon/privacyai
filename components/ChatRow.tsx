@@ -12,10 +12,11 @@ type Props = {
     filterRiskAssessment?: boolean;
     filterAdvice?: boolean;
     filterPrivacyRequirement?: boolean;
+    filterProductSolution?: boolean;
 
 }
 
-function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false, filterPrivacyRequirement = false }: Props) {
+function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false, filterPrivacyRequirement = false, filterProductSolution = false }: Props) {
     const pathname = usePathname();
     const router = useRouter();
     const {data: session} = useSession();
@@ -28,7 +29,10 @@ function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false, filte
         queryParam = where('isAdvice', '==', true);
     } else if (filterPrivacyRequirement) {
         queryParam = where('isPrivacyRequirement', '==', true);
-    } else {
+    } else if (filterProductSolution) {
+        queryParam = where('isProductSolution', '==', true);
+    }else 
+    {
         queryParam = orderBy('createdAt', 'desc');
     }
 
@@ -56,6 +60,7 @@ function ChatRow({ id, filterRiskAssessment = false, filterAdvice = false, filte
     if (pathname) {
         chatBasePath = pathname.includes("/privacyrequirement") ? "/protected/client/privacyrequirementchat" :
                         pathname.includes("/riskassessment") ? "/protected/client/riskassessmentchat" :
+                        pathname.includes("/productsolution") ? "/protected/client/productsolutionchat" :
                         "/protected/client/chat";
     }
 
