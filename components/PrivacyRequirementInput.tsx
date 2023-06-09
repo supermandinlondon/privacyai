@@ -73,7 +73,7 @@ function PrivacyRequirementInput({chatId}: Props) {
         ' When analyzing these privacy requirements and question, please follow these guidelines: ' +
         '1) If the question is asking about if there existing privacy requirements that could help address a privacy risk, provide only the existing privacy requirements that are relevant. ' +
         '2) If the exising privacy requirements do not satisfy the risks raised by the question, provide suggested new privacy requirements that do. ' +
-        '3) When responding, organize your response and please format your it using HTML tags for better readability, such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists.'
+        '3) When responding, organize your response and please format it using HTML tags for better readability, such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists.'
         ;
 
         const combinedText = baseText + prompt + privacyRequirementQuestion + privacyRequirementText.join(' ') + privacyRequirementRules;

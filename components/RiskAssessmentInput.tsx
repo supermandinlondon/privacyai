@@ -69,13 +69,11 @@ function RiskAssessmentInput({chatId}: Props) {
         ' When analyzing the risk observations, please follow these guidelines: ' +
         '1) You can choose which of the risk observations are most relevant to the question. If some are not relevant, do not include them in your analysis and response. ' +
         '2) Provide a summary of your analysis, but also list specific, risks that are separated by a new line. ' +
-        '3) Include the revelent risk observation number at the beginning of each new line in your response, if necessary. ' +
-        '4) Keep your response under 200 words.'
+        '3) Include the relevant risk observation number at the beginning of each new line in your response, if necessary. ' +
+        '4) When responding, organize your response into headers for Analysis Summary, Key Risks, and Recommendations with line breaks after each section. Please format it using HTML tags for better readability, such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists.'
         ;
 
-        const formatting = 'Please use formatting in your response such as bullet points, headers, and subheaders if necessary to improve readability.'
-
-        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules + formatting;
+        const combinedText = baseText + prompt + riskQuestion + riskObservationsText.join(' ') + riskRules;
 
         console.log('Full question:', combinedText);
 

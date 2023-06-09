@@ -86,7 +86,7 @@ def send_embeddings_to_pinecone(embeddings):
     pinecone.init()
 
 # Querying index
-def search_index(query, top_k=5):
+def search_index(query, top_k=3):
     MODEL = "text-embedding-ada-002"
     
     # Set the OpenAI API key

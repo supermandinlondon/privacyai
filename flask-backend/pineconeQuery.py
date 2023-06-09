@@ -44,7 +44,7 @@ def query_embeddings():
         return make_response(jsonify({"error": str(e)}), 500)
 
 
-def search_index(prompt, index_name, top_k=5): 
+def search_index(prompt, index_name, top_k=10): 
     MODEL = "text-embedding-ada-002"
 
     print("OPENAI_API_KEY:", os.getenv("OPENAI_API_KEY"))
