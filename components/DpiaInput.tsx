@@ -16,7 +16,7 @@ function DpiaInput({chatId}: Props) {
     const [prompt, setPrompt] = useState("");
     const {data: session} = useSession();
     const { data: model} = useSWR('model',{
-        fallbackData:'gpt-3.5-turbo'
+        fallbackData:'gpt-4'
     })
     const Domains = [
         {"title":"Fairness"}
@@ -27,18 +27,18 @@ function DpiaInput({chatId}: Props) {
             text: 'Hey! Please generate a DPIA for this product',
             createdAt: serverTimestamp(),
             user:{
-                _id:'emailwadhwani@gmail.com',
+                _id: session?.user?.email!,
                 name: session?.user?.name!,
                 avatar: session?.user?.image! || `https://ui-avatars.com/api/?name="hello"`,
             }
         };       
-        await addDoc(collection(db,'users','emailwadhwani@gmail.com','chats', chatId, 'messages'), message  );
+        await addDoc(collection(db,'users',session?.user?.email!,'chats', chatId, 'messages'), message  );
 
         Domains?.map(
             async ({ title }: { title: string }) => {
                 const firstText = 'You are a data protection officer for Facebook. The company is launching a product which is similar to the Apple Watch. We are calling it TWatch. Can you create a data protection impact assessment (DPIA) to assess potential data protection risk associated with this product and suggest mitigation. Focus on assessing GDPR ';
                 const secondText =  ' requirements. First explain key ' ;
-                const thirdText = ' requirements for this product then write top 10 data protection risks in numbered form and finally write 10 mitigations in bullet form. Make your answers to 2000 words and send your response in an HTML format so that I can copy that in a HTML code ';
+                const thirdText = ' requirements for this product then write top 10 data protection risks in numbered form and finally write 10 mitigations in bullet form.  When responding, organize your response and please format it using HTML tags for better readability, such as <header> for headers, <b> for bold text, <br><br> for line breaks, and <ul> and <li> for unordered lists.';
                 const combinedText = firstText + title + secondText + title + thirdText;
               
                 const notification = toast.loading('ChatGPT is thinking about ...'+title);

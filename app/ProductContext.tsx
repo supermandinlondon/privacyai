@@ -4,19 +4,26 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 
 
+
 // Define the shape of your product data
-interface ProductData {
+export interface ProductData {
   id: string;
   name: string;
-  image:string;
+  image: string;
   desc: string;
-  features: string[];
+  requirements: {
+    evidence: string;
+    requirement: string;
+    analysis: string;
+  }[];
 }
+
+
 
 // Define the shape of your context
 interface ProductContextType {
   selectedProduct: ProductData | null;
-  setSelectedProduct: (product: ProductData | null) => void;
+  setSelectedProduct: (product: ProductData | null | ((prevProduct: ProductData | null) => ProductData | null)) => void;
 }
 
 // Create the ProductContext

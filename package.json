@@ -33,11 +33,13 @@
     "openai": "^3.2.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
+    "react-collapse": "^5.1.1",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
     "react-select": "^5.7.2",
+    "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^9.1.2",
     "react-type-animation": "^3.0.1",
     "swr": "^2.1.5",
@@ -45,6 +47,8 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.0.2"
+    "@types/dompurify": "^3.0.2",
+    "@types/react-collapse": "^5.0.1",
+    "@types/react-syntax-highlighter": "^15.5.7"
   }
 }

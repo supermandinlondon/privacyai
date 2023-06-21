@@ -9,10 +9,10 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import toast from 'react-hot-toast';
 import queryGPT from 'all/lib/queryApi';
 import TransitionEffect from 'all/app/TransitionEffect';
-import { Button } from '@mui/material';
+
 import { EyeIcon } from '@heroicons/react/24/outline';
-import { PlusIcon } from '@heroicons/react/24/solid';
-import { useEffect } from 'react'; // Import useEffect hook
+import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { useEffect } from 'react'; 
 
 import { ProductProvider, useProductContext } from 'all/app/ProductContext';
 
@@ -21,18 +21,18 @@ function NewProduct() {
   const { data: session } = useSession();
 
   const [products, loading, error] = useCollection(
-    session && query(collection(db, 'users', 'emailwadhwani@gmail.com', 'products'), orderBy('createdAt', 'asc'))
+    session && query(collection(db, 'users', session?.user?.email!, 'products'), orderBy('createdAt', 'asc'))
   );
 
   const { setSelectedProduct } = useProductContext();
 
   const createNewProduct = async () => {
     try {
-      const docRef = await addDoc(collection(db, 'users', 'emailwadhwani@gmail.com', 'products'), {
+      const docRef = await addDoc(collection(db, 'users', session?.user?.email!, 'products'), {
         name: 'New Product444',
-        desc: 'Product description', // Add a description field
+        desc: 'Product description', 
         requirements: ['req 11', 'req 21', 'req 31'],
-        userID: 'emailwadhwani@gmail.com',
+        userID: session?.user?.email!,
         createdAt: serverTimestamp(),
         image: 'https://example.com/image.jpg',
       });
@@ -46,7 +46,7 @@ function NewProduct() {
 
   const createNewDpia = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
+      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 
@@ -56,7 +56,7 @@ function NewProduct() {
           name: productData.name,
           image: productData.image,
           desc: productData.desc,
-          features: productData.requirements,
+          requirements: productData.requirements,
         };
 
         setSelectedProduct(selectedProductData);
@@ -75,7 +75,7 @@ function NewProduct() {
 
   const viewDpia = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
+      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 
@@ -85,7 +85,7 @@ function NewProduct() {
           name: productData.name,
           image: productData.image,
           desc: productData.desc,
-          features: productData.requirements,
+          requirements: productData.requirements,
         };
 
         setSelectedProduct(selectedProductData);
@@ -102,9 +102,9 @@ function NewProduct() {
     }
   };
 
-  const viewProduct = async (productId: string) => {
+  const viewEvidence = async (productId: string) => {
     try {
-      const productDocRef = doc(db, 'users', 'emailwadhwani@gmail.com', 'products', productId);
+      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
       const productDocSnap = await getDoc(productDocRef);
       const productData = productDocSnap.data();
 
@@ -114,7 +114,37 @@ function NewProduct() {
           name: productData.name,
           image: productData.image,
           desc: productData.desc,
-          features: productData.requirements,
+          requirements: productData.requirements,
+        };
+
+        setSelectedProduct(selectedProductData);
+
+        console.log('Selected Product777:', setSelectedProduct);
+        router.push(`/evidence/${productId}`);
+        console.log('after routing');
+      } else {
+        console.log('Product not found');
+      }
+    } catch (error) {
+      console.log('errorrrrr');
+      console.error(error);
+    }
+  };
+  
+
+  const viewProduct = async (productId: string) => {
+    try {
+      const productDocRef = doc(db, 'users', session?.user?.email!, 'products', productId);
+      const productDocSnap = await getDoc(productDocRef);
+      const productData = productDocSnap.data();
+
+      if (productData) {
+        const selectedProductData = {
+          id: productId,
+          name: productData.name,
+          image: productData.image,
+          desc: productData.desc,
+          requirements: productData.requirements,
         };
 
         setSelectedProduct(selectedProductData);
@@ -154,12 +184,7 @@ function NewProduct() {
           >
             Add New Product
           </motion.div>
-        
-
-
-
-
-
+      
   </div>
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
     {loading && (
@@ -200,7 +225,7 @@ function NewProduct() {
             </motion.div>
 
             <motion.div
-              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
               whileHover={{
                 backgroundColor: [
                   '#121212',
@@ -217,6 +242,26 @@ function NewProduct() {
               <EyeIcon className="w-5 h-5 mr-2" />
               <p>View DPIA</p>
             </motion.div>
+
+            <motion.div
+            className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
+            whileHover={{
+              backgroundColor: [
+                '#121212',
+                'rgba(131,58,180,1)',
+                'rgba(253,29,29,1)',
+                'rgba(252,176,69,1)',
+                'rgba(131,58,180,1)',
+                '#121212',
+              ],
+              transition: { duration: 1, repeat: Infinity },
+            }}
+            onClick={() => viewEvidence(product.id)} // Call the viewEvidence function on button click
+          >
+            <MagnifyingGlassIcon className="w-5 h-5 mr-2" />
+            <p>Evidence Analysis</p>
+          </motion.div>
+
           </div>
         </div>
         <div className="border-t border-gray-300 mt-4 pt-4">
@@ -232,12 +277,12 @@ function NewProduct() {
           </div>
           <p className="mb-2 font-semibold">Features</p>
           <ul>
-          {product.data().requirements.map((requirement: string, index: number) => (
-              <li key={index} className="mb-1 text-xs">
-                {`${index + 1}. ${requirement}`}
-              </li>
-            ))}
-          </ul>
+          {product.data().requirements.map((requirement: {evidence: string, requirement: string}, index: number) => (
+            <li key={index} className="mb-1 text-xs">
+              {`${index + 1}. ${requirement.requirement}`}
+            </li>
+          ))}
+        </ul>
         </div>
       </motion.div>
     ))}
@@ -248,3 +293,4 @@ function NewProduct() {
 }
 
 export default NewProduct;
+

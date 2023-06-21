@@ -3,7 +3,7 @@
 
 import { useProductContext } from "all/app/ProductContext";
 import { useEffect } from 'react';
-import { PlusIcon, EyeIcon } from '@heroicons/react/24/solid';
+import { PlusIcon, EyeIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Footer from 'all/app/Footer';
@@ -28,6 +28,11 @@ async function Productpage() {
 
   const viewDpia = async (productId: string) => {
     router.push(`/dpia/${productId}`);
+    
+  };
+
+  const viewEvidence = async (productId: string) => {
+    router.push(`/evidence/${productId}`);
     
   };
 
@@ -60,7 +65,7 @@ async function Productpage() {
             </motion.div>
 
             <motion.div
-              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+              className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
               whileHover={{
                 backgroundColor: [
                   '#121212',
@@ -77,6 +82,26 @@ async function Productpage() {
               <EyeIcon className="w-5 h-5 mr-2" />
               <p>View DPIA</p>
             </motion.div>
+            
+            <motion.div
+            className="flex items-center justify-center bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
+            whileHover={{
+              backgroundColor: [
+                '#121212',
+                'rgba(131,58,180,1)',
+                'rgba(253,29,29,1)',
+                'rgba(252,176,69,1)',
+                'rgba(131,58,180,1)',
+                '#121212',
+              ],
+              transition: { duration: 1, repeat: Infinity },
+            }}
+            onClick={() => viewEvidence(selectedProduct.id)} // Call the viewEvidence function on button click
+          >
+            <MagnifyingGlassIcon className="w-5 h-5 mr-2" />
+            <p>Evidence Analysis</p>
+          </motion.div>
+          
           </div>
         <p>{selectedProduct.desc}</p>
         <div className="flex justify-center">
@@ -84,12 +109,14 @@ async function Productpage() {
         </div>
         <p className="mb-2 font-semibold">Features</p>
         <ul>
-          {selectedProduct.features.map((requirement: string, index: number) => (
-            <li key={index} className="mb-1 text-xs">
-              {`${index + 1}. ${requirement}`}
-            </li>
-          ))}
-        </ul>
+  {selectedProduct.requirements.map((feature, index: number) => (
+    <li key={index} className="mb-1 text-xs">
+      {`${index + 1}. ${feature.requirement}`}
+    </li>
+  ))}
+</ul>
+
+
       </div>
     ) : (
       <div className="p-6">

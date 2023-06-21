@@ -75,7 +75,7 @@ function DpiaPage() {
       console.log('Checkbox 3:', euCheckbox);
       console.log('Selected Options:', selectedOptions.map((option) => option.key));
 
-      const model = 'text-davinci-003';
+      const model = 'gpt-4';
 
 
       validPrompts.forEach(async (additionalAssessment, index) => {
@@ -275,12 +275,13 @@ function DpiaPage() {
                 </div>
                 <p className="mb-2 font-semibold">Features</p>
                 <ul>
-                  {selectedProduct.features.map((requirement: string, index: number) => (
-                    <li key={index} className="mb-1 text-xs">
-                      {`${index + 1}. ${requirement}`}
-                    </li>
-                  ))}
-                </ul>
+                {selectedProduct.requirements.map((requirements, index: number) => (
+    <li key={index} className="mb-1 text-xs">
+      {`${index + 1}. ${requirements.requirement}`}
+    </li>
+  ))}
+</ul>
+                
         </div>
       ) : (
         <div className="p-6">

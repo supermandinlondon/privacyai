@@ -23,7 +23,7 @@ function Dpia({ dpiaId }: Props) {
         collection(
           db, 
           "users", 
-          "emailwadhwani@gmail.com", 
+          session?.user?.email!, 
           "chats", 
           dpiaId, 
           "messages"

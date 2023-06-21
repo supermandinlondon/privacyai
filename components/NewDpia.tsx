@@ -10,12 +10,12 @@ import { db } from 'all/firebase';
 function NewDpia() {
   const router = useRouter();
   const {data: session } = useSession();
-  const creteNewDpia = async() => {
+  const createNewDpia = async() => {
   try{
 
   const doc = await addDoc (
-    collection(db,"users", 'emailwadhwani@gmail.com', "chats"),{
-      userID:'emailwadhwani@gmail.com',
+    collection(db,"users", session?.user?.email!, "chats"),{
+      userID:session?.user?.email!,
       createdAt: serverTimestamp()
     }
     );
@@ -31,7 +31,7 @@ function NewDpia() {
   };
   
   return (
-    <div onClick ={creteNewDpia} className='border-gray-700 border chatRow' >
+    <div onClick ={createNewDpia} className='border-gray-700 border chatRow' >
        <PlusIcon className='h-4 w-4'/>
         <p> New Dpia</p>
     </div>

@@ -51,7 +51,7 @@ function Dpia2({ dpiaId }: Props) {
           const collectionRef = collection(
             db,
             "users",
-            "emailwadhwani@gmail.com",
+            session?.user?.email!,
             "products",
             dpiaId,
             domain
@@ -113,9 +113,9 @@ function Dpia2({ dpiaId }: Props) {
                 </div>
                 <p className="mb-2 font-semibold">Features</p>
                 <ul>
-                  {selectedProduct.features.map((requirement: string, index: number) => (
+                  {selectedProduct.requirements.map((requirements, index: number) => (
                     <li key={index} className="mb-1 text-xs">
-                      {`${index + 1}. ${requirement}`}
+                      {`${index + 1}. ${requirements.requirement}`}
                     </li>
                   ))}
                 </ul>
